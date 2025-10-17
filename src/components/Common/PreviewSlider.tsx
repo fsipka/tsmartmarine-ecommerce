@@ -99,7 +99,7 @@ const PreviewSliderModal = () => {
         ref={sliderRef}
         slidesPerView={1}
         spaceBetween={20}
-        initialSlide={data.activePreviewIndex || 0}
+        initialSlide={0}
       >
         {data?.imgs?.previews?.map((img, index) => (
           <SwiperSlide key={index}>

@@ -7,11 +7,11 @@ const API_URL = process.env.API_URL || 'http://localhost:5000/api';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
-    const { id } = params;
+    const { id } = await params;
 
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',

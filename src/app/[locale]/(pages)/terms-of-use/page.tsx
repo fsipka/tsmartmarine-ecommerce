@@ -29,7 +29,7 @@ export default function TermsOfUsePage() {
                 <h2 className="text-xl font-semibold text-dark mb-3">2. Use of Website</h2>
                 <p>
                   You agree to use this website only for lawful purposes and in a way that does not
-                  infringe the rights of, restrict or inhibit anyone else's use and enjoyment of the
+                  infringe the rights of, restrict or inhibit anyone else&apos;s use and enjoyment of the
                   website. You must not misuse our website by introducing viruses, trojans, worms, or
                   other malicious material.
                 </p>

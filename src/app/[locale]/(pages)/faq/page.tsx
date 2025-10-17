@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Metadata } from "next";
 import Breadcrumb from "@/components/Common/Breadcrumb";
+import Link from "next/link";
 
 const faqData = [
   {
@@ -119,14 +120,14 @@ export default function FAQPage() {
                 Still have questions?
               </h3>
               <p className="text-body mb-6">
-                Can't find the answer you're looking for? Please contact our customer support team.
+                Can&apos;t find the answer you&apos;re looking for? Please contact our customer support team.
               </p>
-              <a
+              <Link
                 href="/contact"
                 className="inline-flex font-medium text-custom-sm text-white bg-blue py-3 px-9.5 rounded-md ease-out duration-200 hover:bg-blue-dark"
               >
                 Contact Us
-              </a>
+              </Link>
             </div>
           </div>
         </div>
