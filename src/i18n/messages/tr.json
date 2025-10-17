@@ -1,0 +1,83 @@
+{
+  "common": {
+    "home": "Anasayfa",
+    "shop": "Mağaza",
+    "products": "Ürünler",
+    "cart": "Sepet",
+    "checkout": "Ödeme",
+    "account": "Hesabım",
+    "orders": "Siparişler",
+    "wishlist": "İstek Listesi",
+    "logout": "Çıkış Yap",
+    "login": "Giriş Yap",
+    "register": "Kayıt Ol",
+    "search": "Ara",
+    "categories": "Kategoriler",
+    "filter": "Filtrele",
+    "sort": "Sırala",
+    "addToCart": "Sepete Ekle",
+    "buyNow": "Hemen Al",
+    "viewDetails": "Detayları Gör",
+    "loading": "Yükleniyor...",
+    "error": "Hata",
+    "success": "Başarılı"
+  },
+  "auth": {
+    "signIn": "Giriş Yap",
+    "signUp": "Kayıt Ol",
+    "email": "E-posta",
+    "password": "Şifre",
+    "confirmPassword": "Şifre Tekrar",
+    "firstName": "Ad",
+    "lastName": "Soyad",
+    "forgotPassword": "Şifremi Unuttum?",
+    "rememberMe": "Beni hatırla",
+    "dontHaveAccount": "Hesabınız yok mu?",
+    "alreadyHaveAccount": "Zaten hesabınız var mı?",
+    "signInWithGoogle": "Google ile giriş yap",
+    "signInWithGithub": "Github ile giriş yap"
+  },
+  "product": {
+    "price": "Fiyat",
+    "quantity": "Miktar",
+    "inStock": "Stokta",
+    "outOfStock": "Stokta Yok",
+    "addToWishlist": "İstek Listesine Ekle",
+    "description": "Açıklama",
+    "reviews": "Yorumlar",
+    "rating": "Değerlendirme",
+    "brand": "Marka",
+    "category": "Kategori"
+  },
+  "cart": {
+    "yourCart": "Sepetiniz",
+    "emptyCart": "Sepetiniz boş!",
+    "subtotal": "Ara Toplam",
+    "total": "Toplam",
+    "proceedToCheckout": "Ödemeye Geç",
+    "continueShopping": "Alışverişe Devam Et",
+    "remove": "Kaldır",
+    "update": "Güncelle"
+  },
+  "checkout": {
+    "billingDetails": "Fatura Bilgileri",
+    "shippingAddress": "Teslimat Adresi",
+    "paymentMethod": "Ödeme Yöntemi",
+    "orderSummary": "Sipariş Özeti",
+    "placeOrder": "Siparişi Tamamla",
+    "firstName": "Ad",
+    "lastName": "Soyad",
+    "email": "E-posta",
+    "phone": "Telefon",
+    "address": "Adres",
+    "city": "Şehir",
+    "country": "Ülke",
+    "zipCode": "Posta Kodu"
+  },
+  "validation": {
+    "required": "Bu alan zorunludur",
+    "emailInvalid": "Geçersiz e-posta adresi",
+    "passwordMin": "Şifre en az 8 karakter olmalıdır",
+    "passwordsDoNotMatch": "Şifreler eşleşmiyor"
+  }
+}

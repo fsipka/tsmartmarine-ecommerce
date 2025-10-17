@@ -1,0 +1,83 @@
+{
+  "common": {
+    "home": "Home",
+    "shop": "Shop",
+    "products": "Products",
+    "cart": "Cart",
+    "checkout": "Checkout",
+    "account": "My Account",
+    "orders": "Orders",
+    "wishlist": "Wishlist",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register",
+    "search": "Search",
+    "categories": "Categories",
+    "filter": "Filter",
+    "sort": "Sort",
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now",
+    "viewDetails": "View Details",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "forgotPassword": "Forgot Password?",
+    "rememberMe": "Remember me",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "signInWithGoogle": "Sign in with Google",
+    "signInWithGithub": "Sign in with Github"
+  },
+  "product": {
+    "price": "Price",
+    "quantity": "Quantity",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock",
+    "addToWishlist": "Add to Wishlist",
+    "description": "Description",
+    "reviews": "Reviews",
+    "rating": "Rating",
+    "brand": "Brand",
+    "category": "Category"
+  },
+  "cart": {
+    "yourCart": "Your Cart",
+    "emptyCart": "Your cart is empty!",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "proceedToCheckout": "Proceed to Checkout",
+    "continueShopping": "Continue Shopping",
+    "remove": "Remove",
+    "update": "Update"
+  },
+  "checkout": {
+    "billingDetails": "Billing Details",
+    "shippingAddress": "Shipping Address",
+    "paymentMethod": "Payment Method",
+    "orderSummary": "Order Summary",
+    "placeOrder": "Place Order",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "country": "Country",
+    "zipCode": "Zip Code"
+  },
+  "validation": {
+    "required": "This field is required",
+    "emailInvalid": "Invalid email address",
+    "passwordMin": "Password must be at least 8 characters",
+    "passwordsDoNotMatch": "Passwords do not match"
+  }
+}
