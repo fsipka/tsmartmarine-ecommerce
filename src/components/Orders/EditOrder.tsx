@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 const EditOrder = ({ order, toggleModal }: any) => {
+  const t = useTranslations();
   const [currentStatus, setCurrentStatus] = useState(order?.status);
   const handleChanege = (e: any) => {
     setCurrentStatus(e.target.value);
@@ -20,7 +22,7 @@ const EditOrder = ({ order, toggleModal }: any) => {
 
   return (
     <div className="w-full px-10">
-      <p className="pb-2 font-medium text-dark">Order Status</p>
+      <p className="pb-2 font-medium text-dark">{t("account.orderStatus")}</p>
       <div className="w-full">
         <select
           className="w-full rounded-[10px] border border-gray-3 bg-gray-1 text-dark py-3.5 px-5 text-custom-sm"
@@ -29,17 +31,17 @@ const EditOrder = ({ order, toggleModal }: any) => {
           required
           onChange={handleChanege}
         >
-          <option value="processing">Processing</option>
-          <option value="on-hold">On Hold</option>
-          <option value="delivered">Delivered</option>
-          <option value="cancelled">Cancelled</option>
+          <option value="processing">{t("account.processing")}</option>
+          <option value="on-hold">{t("account.onHold")}</option>
+          <option value="delivered">{t("account.delivered")}</option>
+          <option value="cancelled">{t("account.cancelled")}</option>
         </select>
 
         <button
           className="mt-5 w-full rounded-[10px] border border-blue-1 bg-blue-1 text-white py-3.5 px-5 text-custom-sm bg-blue"
           onClick={handleSubmit}
         >
-          Save Changes
+          {t("account.saveChanges")}
         </button>
       </div>
     </div>

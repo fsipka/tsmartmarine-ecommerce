@@ -6,8 +6,10 @@ import { removeItemFromWishlist } from "@/redux/features/wishlist-slice";
 import { addItemToCart } from "@/redux/features/cart-slice";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 const SingleItem = ({ item }) => {
+  const t = useTranslations();
   const dispatch = useDispatch<AppDispatch>();
 
   const handleRemoveFromWishlist = () => {
@@ -98,7 +100,7 @@ const SingleItem = ({ item }) => {
             />
           </svg>
 
-          <span className="text-red"> Out of Stock </span>
+          <span className="text-red">{t("product.outOfStock")}</span>
         </div>
       </div>
 
@@ -107,7 +109,7 @@ const SingleItem = ({ item }) => {
           onClick={() => handleAddToCart()}
           className="inline-flex text-dark hover:text-white bg-gray-1 border border-gray-3 py-2.5 px-6 rounded-md ease-out duration-200 hover:bg-blue hover:border-gray-3"
         >
-          Add to Cart
+          {t("common.addToCart")}
         </button>
       </div>
     </div>

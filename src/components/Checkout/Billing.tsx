@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { BillingDetails } from "@/types/order";
 import { getSession } from "@/lib/auth/session";
 
@@ -9,6 +10,8 @@ interface BillingProps {
 }
 
 const Billing: React.FC<BillingProps> = ({ billingDetails, onChange }) => {
+  const t = useTranslations();
+
   // Pre-fill from session on mount
   useEffect(() => {
     const session = getSession();
@@ -37,14 +40,14 @@ const Billing: React.FC<BillingProps> = ({ billingDetails, onChange }) => {
   return (
     <div className="mt-9">
       <h2 className="font-medium text-dark text-xl sm:text-2xl mb-5.5">
-        Billing details
+        {t("checkout.billingDetails")}
       </h2>
 
       <div className="bg-white shadow-1 rounded-[10px] p-4 sm:p-8.5">
         <div className="flex flex-col lg:flex-row gap-5 sm:gap-8 mb-5">
           <div className="w-full">
             <label htmlFor="firstName" className="block mb-2.5">
-              First Name <span className="text-red">*</span>
+              {t("checkout.firstName")} <span className="text-red">*</span>
             </label>
 
             <input
@@ -53,7 +56,7 @@ const Billing: React.FC<BillingProps> = ({ billingDetails, onChange }) => {
               id="firstName"
               value={billingDetails.firstName}
               onChange={(e) => handleChange('firstName', e.target.value)}
-              placeholder="John"
+              placeholder={t("checkout.firstNamePlaceholder")}
               required
               className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
             />
@@ -61,7 +64,7 @@ const Billing: React.FC<BillingProps> = ({ billingDetails, onChange }) => {
 
           <div className="w-full">
             <label htmlFor="lastName" className="block mb-2.5">
-              Last Name <span className="text-red">*</span>
+              {t("checkout.lastName")} <span className="text-red">*</span>
             </label>
 
             <input
@@ -70,7 +73,7 @@ const Billing: React.FC<BillingProps> = ({ billingDetails, onChange }) => {
               id="lastName"
               value={billingDetails.lastName}
               onChange={(e) => handleChange('lastName', e.target.value)}
-              placeholder="Doe"
+              placeholder={t("checkout.lastNamePlaceholder")}
               required
               className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
             />
@@ -94,7 +97,7 @@ const Billing: React.FC<BillingProps> = ({ billingDetails, onChange }) => {
 
         <div className="mb-5">
           <label htmlFor="country" className="block mb-2.5">
-            Country/ Region <span className="text-red">*</span>
+            {t("checkout.country")} <span className="text-red">*</span>
           </label>
 
           <input
@@ -103,7 +106,7 @@ const Billing: React.FC<BillingProps> = ({ billingDetails, onChange }) => {
             id="country"
             value={billingDetails.country}
             onChange={(e) => handleChange('country', e.target.value)}
-            placeholder="Enter country"
+            placeholder={t("checkout.countryPlaceholder")}
             required
             className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
           />
@@ -111,7 +114,7 @@ const Billing: React.FC<BillingProps> = ({ billingDetails, onChange }) => {
 
         <div className="mb-5">
           <label htmlFor="streetAddress" className="block mb-2.5">
-            Street Address <span className="text-red">*</span>
+            {t("checkout.address")} <span className="text-red">*</span>
           </label>
 
           <input
@@ -120,7 +123,7 @@ const Billing: React.FC<BillingProps> = ({ billingDetails, onChange }) => {
             id="streetAddress"
             value={billingDetails.streetAddress}
             onChange={(e) => handleChange('streetAddress', e.target.value)}
-            placeholder="House number and street name"
+            placeholder={t("checkout.addressPlaceholder")}
             required
             className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
           />
@@ -132,7 +135,7 @@ const Billing: React.FC<BillingProps> = ({ billingDetails, onChange }) => {
               id="apartment"
               value={billingDetails.apartment || ''}
               onChange={(e) => handleChange('apartment', e.target.value)}
-              placeholder="Apartment, suite, unit, etc. (optional)"
+              placeholder={t("checkout.addressOptionalPlaceholder")}
               className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
             />
           </div>
@@ -140,7 +143,7 @@ const Billing: React.FC<BillingProps> = ({ billingDetails, onChange }) => {
 
         <div className="mb-5">
           <label htmlFor="city" className="block mb-2.5">
-            Town/ City <span className="text-red">*</span>
+            {t("checkout.city")} <span className="text-red">*</span>
           </label>
 
           <input
@@ -171,7 +174,7 @@ const Billing: React.FC<BillingProps> = ({ billingDetails, onChange }) => {
 
         <div className="mb-5">
           <label htmlFor="phone" className="block mb-2.5">
-            Phone <span className="text-red">*</span>
+            {t("checkout.phone")} <span className="text-red">*</span>
           </label>
 
           <input
@@ -187,7 +190,7 @@ const Billing: React.FC<BillingProps> = ({ billingDetails, onChange }) => {
 
         <div className="mb-5.5">
           <label htmlFor="email" className="block mb-2.5">
-            Email Address <span className="text-red">*</span>
+            {t("checkout.email")} <span className="text-red">*</span>
           </label>
 
           <input

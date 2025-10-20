@@ -19,20 +19,17 @@ export const stripeService = {
         currency: currency.toLowerCase(),
       };
 
-      console.log('Creating Payment Intent:', requestPayload);
-
       const response = await api.post<ApiResponse<PaymentIntentResponse>>(
         '/stripe/CreatePaymentIntent',
         requestPayload
       );
 
-      const clientSecret = response.data.data?.clientSecret || response.data.clientSecret;
+      const clientSecret = response.data.data?.clientSecret;
 
       if (!clientSecret) {
         throw new Error('Client Secret not received from API');
       }
 
-      console.log('Payment Intent created successfully');
       return clientSecret;
     } catch (error: any) {
       console.error('Failed to create payment intent:', error);

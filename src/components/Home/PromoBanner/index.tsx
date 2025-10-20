@@ -3,22 +3,16 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { productsService } from "@/lib/api/services/products.service";
-import { getSession } from "@/lib/auth/session";
+import { useTranslations } from "next-intl";
 
 const PromoBanner = () => {
+  const t = useTranslations("common");
   const [yacht, setYacht] = useState<any>(null);
   const [accessory, setAccessory] = useState<any>(null);
   const [service, setService] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [companyLogo, setCompanyLogo] = useState<string | null>(null);
 
   useEffect(() => {
-    // Get company logo from session
-    const session = getSession();
-    if (session?.user?.companyLogoUrl) {
-      setCompanyLogo(session.user.companyLogoUrl);
-    }
-
     const fetchRandomProducts = async () => {
       try {
         const allProducts = await productsService.getAllProductsForComponents();
@@ -55,22 +49,26 @@ const PromoBanner = () => {
     if (yacht?.imgs?.previews && yacht.imgs.previews.length > 0) {
       return yacht.imgs.previews[0];
     }
-    return companyLogo || "/images/products/product-01.png";
+    return null;
   };
 
   const getAccessoryImage = () => {
     if (accessory?.imgs?.previews && accessory.imgs.previews.length > 0) {
       return accessory.imgs.previews[0];
     }
-    return companyLogo || "/images/promo/promo-02.png";
+    return null;
   };
 
   const getServiceImage = () => {
     if (service?.imgs?.previews && service.imgs.previews.length > 0) {
       return service.imgs.previews[0];
     }
-    return companyLogo || "/images/promo/promo-03.png";
+    return null;
   };
+
+  const yachtImage = getYachtImage();
+  const accessoryImage = getAccessoryImage();
+  const serviceImage = getServiceImage();
 
   return (
     <section className="overflow-hidden py-20">
@@ -111,13 +109,33 @@ const PromoBanner = () => {
           </div>
 
           {!loading && yacht && (
-            <Image
-              src={getYachtImage()}
-              alt={yacht.title || "yacht"}
-              className="absolute top-1/2 -translate-y-1/2 right-4 lg:right-26 -z-1 object-contain"
-              width={274}
-              height={350}
-            />
+            yachtImage ? (
+              <Image
+                src={yachtImage}
+                alt={yacht.title || "yacht"}
+                className="absolute top-1/2 -translate-y-1/2 right-4 lg:right-26 -z-1 object-contain"
+                width={274}
+                height={350}
+                unoptimized={yachtImage.startsWith('http')}
+              />
+            ) : (
+              <div className="absolute top-1/2 -translate-y-1/2 right-4 lg:right-26 -z-1 flex flex-col items-center justify-center text-gray-4">
+                <svg
+                  className="w-24 h-24 mb-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                <p className="text-xs">{t("noImage") || "No Image"}</p>
+              </div>
+            )
           )}
         </div>
 
@@ -125,13 +143,33 @@ const PromoBanner = () => {
           {/* <!-- promo banner small - Accessory --> */}
           <div className="relative z-1 overflow-hidden rounded-lg bg-[#DBF4F3] py-10 xl:py-16 px-4 sm:px-7.5 xl:px-10">
             {!loading && accessory && (
-              <Image
-                src={getAccessoryImage()}
-                alt={accessory.title || "accessory"}
-                className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-10 -z-1 object-contain"
-                width={241}
-                height={241}
-              />
+              accessoryImage ? (
+                <Image
+                  src={accessoryImage}
+                  alt={accessory.title || "accessory"}
+                  className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-10 -z-1 object-contain"
+                  width={241}
+                  height={241}
+                  unoptimized={accessoryImage.startsWith('http')}
+                />
+              ) : (
+                <div className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-10 -z-1 flex flex-col items-center justify-center text-gray-4">
+                  <svg
+                    className="w-20 h-20 mb-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <p className="text-xs">{t("noImage") || "No Image"}</p>
+                </div>
+              )
             )}
 
             <div className="text-right">
@@ -171,13 +209,33 @@ const PromoBanner = () => {
           {/* <!-- promo banner small - Service --> */}
           <div className="relative z-1 overflow-hidden rounded-lg bg-[#FFECE1] py-10 xl:py-16 px-4 sm:px-7.5 xl:px-10">
             {!loading && service && (
-              <Image
-                src={getServiceImage()}
-                alt={service.title || "service"}
-                className="absolute top-1/2 -translate-y-1/2 right-3 sm:right-8.5 -z-1 object-contain"
-                width={200}
-                height={200}
-              />
+              serviceImage ? (
+                <Image
+                  src={serviceImage}
+                  alt={service.title || "service"}
+                  className="absolute top-1/2 -translate-y-1/2 right-3 sm:right-8.5 -z-1 object-contain"
+                  width={200}
+                  height={200}
+                  unoptimized={serviceImage.startsWith('http')}
+                />
+              ) : (
+                <div className="absolute top-1/2 -translate-y-1/2 right-3 sm:right-8.5 -z-1 flex flex-col items-center justify-center text-gray-4">
+                  <svg
+                    className="w-20 h-20 mb-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <p className="text-xs">{t("noImage") || "No Image"}</p>
+                </div>
+              )
             )}
 
             <div>

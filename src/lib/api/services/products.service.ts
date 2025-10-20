@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ApiResponse } from '../types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -95,12 +96,6 @@ export interface Service {
   companyId: number;
 }
 
-export interface ApiResponse<T> {
-  data: T;
-  statusCode: number;
-  errors: string[] | null;
-}
-
 export interface Product {
   id: number;
   name: string;
@@ -180,17 +175,6 @@ const convertToComponentProduct = (apiProduct: Product): any => {
     },
   };
 
-  // Debug log for first few products
-  if (Math.random() < 0.1) { // Log 10% of products
-    console.log('Converted product:', {
-      name: result.title,
-      type: result.type,
-      images: result.imgs.previews,
-      originalImages: apiProduct.images,
-      primaryFile: apiProduct.yachtPrimaryFile || apiProduct.accessoryPrimaryFile || apiProduct.sparePartPrimaryFile || apiProduct.servicePrimaryFile
-    });
-  }
-
   return result;
 };
 
@@ -200,14 +184,6 @@ export const productsService = {
     try {
       const response = await publicClient.get<ApiResponse<Yacht[]>>('/yachts');
       const yachts = response.data.data || [];
-      console.log('Yachts count:', yachts.length);
-      if (yachts.length > 0) {
-        console.log('First yacht sample:', {
-          name: yachts[0].name,
-          yachtFiles: yachts[0].yachtFiles?.length || 0,
-          yachtPrimaryFile: yachts[0].yachtPrimaryFile,
-        });
-      }
       return yachts;
     } catch (error) {
       console.error('Failed to fetch yachts:', error);
@@ -219,7 +195,6 @@ export const productsService = {
   getAccessories: async (): Promise<Accessory[]> => {
     try {
       const response = await publicClient.get<ApiResponse<Accessory[]>>('/accessories');
-      console.log('Accessories API Response:', JSON.stringify(response.data.data, null, 2));
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch accessories:', error);
@@ -231,7 +206,6 @@ export const productsService = {
   getSpareParts: async (): Promise<SparePart[]> => {
     try {
       const response = await publicClient.get<ApiResponse<SparePart[]>>('/spareparts');
-      console.log('Spare Parts API Response:', JSON.stringify(response.data.data, null, 2));
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch spare parts:', error);
@@ -243,7 +217,6 @@ export const productsService = {
   getServices: async (): Promise<Service[]> => {
     try {
       const response = await publicClient.get<ApiResponse<Service[]>>('/services');
-      console.log('Services API Response:', JSON.stringify(response.data.data, null, 2));
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch services:', error);
@@ -318,7 +291,6 @@ export const productsService = {
         })),
       ];
 
-      console.log(`Total products loaded: ${products.length}`);
       return products;
     } catch (error) {
       console.error('Failed to fetch all products:', error);

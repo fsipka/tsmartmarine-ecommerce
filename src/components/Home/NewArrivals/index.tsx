@@ -4,10 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import ProductItem from "@/components/Common/ProductItem";
 import { productsService, Product as ApiProduct } from "@/lib/api/services/products.service";
+import { useTranslations } from "next-intl";
 
 const CONTENT_BASE_URL = 'https://marineapi.tsmart.ai/contents/';
 
 const NewArrival = () => {
+  const t = useTranslations("home");
+  const tCommon = useTranslations("common");
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -87,10 +90,10 @@ const NewArrival = () => {
                   strokeLinecap="round"
                 />
               </svg>
-              This Week&apos;s
+              {t("thisWeek")}
             </span>
             <h2 className="font-semibold text-xl xl:text-heading-5 text-dark">
-              New Arrivals
+              {t("newArrivals")}
             </h2>
           </div>
 
@@ -98,7 +101,7 @@ const NewArrival = () => {
             href="/shop"
             className="inline-flex font-medium text-custom-sm py-2.5 px-7 rounded-md border-gray-3 border bg-gray-1 text-dark ease-out duration-200 hover:bg-dark hover:text-white hover:border-transparent"
           >
-            View All
+            {tCommon("viewAll")}
           </Link>
         </div>
 
@@ -108,7 +111,7 @@ const NewArrival = () => {
           </div>
         ) : products.length === 0 ? (
           <div className="flex items-center justify-center min-h-[400px]">
-            <p className="text-dark-4">No products available</p>
+            <p className="text-dark-4">{tCommon("noProductsAvailable")}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-7.5 gap-y-9">

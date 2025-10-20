@@ -1,8 +1,7 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import CustomSelect from "./CustomSelect";
+import { useRouter, usePathname } from "next/navigation";
 import { menuData } from "./menuData";
 import Dropdown from "./Dropdown";
 import { useAppSelector } from "@/redux/store";
@@ -11,15 +10,34 @@ import { selectTotalPrice } from "@/redux/features/cart-slice";
 import { useCartModalContext } from "@/app/context/CartSidebarModalContext";
 import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
+import { useTranslations, useLocale } from "next-intl";
+import { productsService } from "@/lib/api/services/products.service";
+
+interface SearchSuggestion {
+  id: number;
+  name: string;
+  price: number;
+  mainImage: string;
+  category: string;
+  type: 'yacht' | 'accessory' | 'spare-part' | 'service';
+}
 
 const Header = () => {
+  const t = useTranslations();
+  const locale = useLocale();
+  const pathname = usePathname();
   const { user, isAuthenticated, logout } = useAuth();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("0");
+  const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showLangDropdown, setShowLangDropdown] = useState(false);
   const { openCartModal } = useCartModalContext();
+  const searchRef = useRef<HTMLDivElement>(null);
+  const langRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = () => {
     logout();
@@ -33,16 +51,113 @@ const Header = () => {
     openCartModal();
   };
 
+  // Close suggestions and language dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+      if (langRef.current && !langRef.current.contains(event.target as Node)) {
+        setShowLangDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Language switching
+  const languages = [
+    { code: 'en', name: 'English', flag: '/images/flags/us.svg' },
+    { code: 'tr', name: 'Türkçe', flag: '/images/flags/tr.svg' },
+    { code: 'fr-ca', name: 'Français', flag: '/images/flags/ca.svg' }
+  ];
+
+  const currentLanguage = languages.find(lang => lang.code === locale) || languages[0];
+
+  const handleLanguageChange = (langCode: string) => {
+    setShowLangDropdown(false);
+    const newPathname = pathname.replace(`/${locale}`, `/${langCode}`);
+    router.push(newPathname);
+  };
+
+  // Fetch suggestions as user types
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (searchQuery.trim().length < 2) {
+        setSuggestions([]);
+        setShowSuggestions(false);
+        return;
+      }
+
+      setIsSearching(true);
+      try {
+        const allProducts = await productsService.getAllProducts();
+
+        // Filter products based on search query
+        const filtered = allProducts
+          .filter((product: any) =>
+            product &&
+            product.name &&
+            typeof product.name === 'string' &&
+            product.name.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+          .slice(0, 5) // Show max 5 suggestions
+          .map((product: any) => {
+            // Get the main image
+            let mainImage = '/images/placeholder.png';
+            if (product.images && product.images.length > 0) {
+              mainImage = product.images[0];
+            } else if (product.yachtPrimaryFile?.url) {
+              mainImage = `https://marineapi.tsmart.ai/contents/${product.yachtPrimaryFile.url}`;
+            } else if (product.accessoryPrimaryFile?.url) {
+              mainImage = `https://marineapi.tsmart.ai/contents/${product.accessoryPrimaryFile.url}`;
+            } else if (product.sparePartPrimaryFile?.url) {
+              mainImage = `https://marineapi.tsmart.ai/contents/${product.sparePartPrimaryFile.url}`;
+            } else if (product.servicePrimaryFile?.url) {
+              mainImage = `https://marineapi.tsmart.ai/contents/${product.servicePrimaryFile.url}`;
+            }
+
+            return {
+              id: product.id,
+              name: product.name,
+              price: product.price || 0,
+              mainImage: mainImage,
+              category: product.type || 'product',
+              type: product.type
+            };
+          });
+
+        setSuggestions(filtered);
+        setShowSuggestions(filtered.length > 0);
+      } catch (error) {
+        console.error("Failed to fetch suggestions:", error);
+        setSuggestions([]);
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    const debounceTimer = setTimeout(() => {
+      fetchSuggestions();
+    }, 300);
+
+    return () => clearTimeout(debounceTimer);
+  }, [searchQuery]);
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      const params = new URLSearchParams();
-      params.set('search', searchQuery.trim());
-      if (selectedCategory !== "0") {
-        params.set('category', selectedCategory);
-      }
-      router.push(`/shop?${params.toString()}`);
+      setShowSuggestions(false);
+      router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
     }
+  };
+
+  const handleSuggestionClick = (suggestion: SearchSuggestion) => {
+    setShowSuggestions(false);
+    setSearchQuery("");
+    // Route based on product type with id as query parameter
+    router.push(`/shop-details?id=${suggestion.id}&type=${suggestion.type}`);
   };
 
   // Sticky menu
@@ -57,17 +172,6 @@ const Header = () => {
   useEffect(() => {
     window.addEventListener("scroll", handleStickyMenu);
   });
-
-  const options = [
-    { label: "All Categories", value: "0" },
-    { label: "Desktop", value: "1" },
-    { label: "Laptop", value: "2" },
-    { label: "Monitor", value: "3" },
-    { label: "Phone", value: "4" },
-    { label: "Watch", value: "5" },
-    { label: "Mouse", value: "6" },
-    { label: "Tablet", value: "7" },
-  ];
 
   return (
     <header
@@ -93,60 +197,170 @@ const Header = () => {
                 />
               ) : (
                 <Image
-                  src="/images/logo/logo.svg"
-                  alt="Logo"
+                  src="/images/marine.webp"
+                  alt="Marine Logo"
                   width={219}
                   height={36}
                 />
               )}
             </Link>
 
-            <div className="max-w-[475px] w-full">
+            <div className="flex items-center gap-3 max-w-[700px] w-full">
+              <div className="flex-1" ref={searchRef}>
               <form onSubmit={handleSearch}>
-                <div className="flex items-center">
-                  <CustomSelect
-                    options={options}
-                    onChange={(value) => setSelectedCategory(value)}
+                <div className="relative w-full">
+                  <input
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    value={searchQuery}
+                    type="search"
+                    name="search"
+                    id="search"
+                    placeholder={t("search.searchPlaceholder")}
+                    autoComplete="off"
+                    className="custom-search w-full rounded-[5px] bg-gray-1 border border-gray-3 py-2.5 pl-4 pr-10 outline-none ease-in duration-200 focus:border-blue"
                   />
 
-                  <div className="relative max-w-[333px] sm:min-w-[333px] w-full">
-                    {/* <!-- divider --> */}
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 inline-block w-px h-5.5 bg-gray-4"></span>
-                    <input
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      value={searchQuery}
-                      type="search"
-                      name="search"
-                      id="search"
-                      placeholder="I am shopping for..."
-                      autoComplete="off"
-                      className="custom-search w-full rounded-r-[5px] bg-gray-1 !border-l-0 border border-gray-3 py-2.5 pl-4 pr-10 outline-none ease-in duration-200"
-                    />
-
-                    <button
-                      type="submit"
-                      id="search-btn"
-                      aria-label="Search"
-                      className="flex items-center justify-center absolute right-3 top-1/2 -translate-y-1/2 ease-in duration-200 hover:text-blue"
+                  <button
+                    type="submit"
+                    id="search-btn"
+                    aria-label="Search"
+                    className="flex items-center justify-center absolute right-3 top-1/2 -translate-y-1/2 ease-in duration-200 hover:text-blue"
+                  >
+                    <svg
+                      className="fill-current"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 18 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      <svg
-                        className="fill-current"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 18 18"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M17.2687 15.6656L12.6281 11.8969C14.5406 9.28123 14.3437 5.5406 11.9531 3.1781C10.6875 1.91248 8.99995 1.20935 7.19995 1.20935C5.39995 1.20935 3.71245 1.91248 2.44683 3.1781C-0.168799 5.79373 -0.168799 10.0687 2.44683 12.6844C3.71245 13.95 5.39995 14.6531 7.19995 14.6531C8.91558 14.6531 10.5187 14.0062 11.7843 12.8531L16.4812 16.65C16.5937 16.7344 16.7343 16.7906 16.875 16.7906C17.0718 16.7906 17.2406 16.7062 17.3531 16.5656C17.5781 16.2844 17.55 15.8906 17.2687 15.6656ZM7.19995 13.3875C5.73745 13.3875 4.38745 12.825 3.34683 11.7844C1.20933 9.64685 1.20933 6.18748 3.34683 4.0781C4.38745 3.03748 5.73745 2.47498 7.19995 2.47498C8.66245 2.47498 10.0125 3.03748 11.0531 4.0781C13.1906 6.2156 13.1906 9.67498 11.0531 11.7844C10.0406 12.825 8.66245 13.3875 7.19995 13.3875Z"
-                          fill=""
-                        />
-                      </svg>
-                    </button>
-                  </div>
+                      <path
+                        d="M17.2687 15.6656L12.6281 11.8969C14.5406 9.28123 14.3437 5.5406 11.9531 3.1781C10.6875 1.91248 8.99995 1.20935 7.19995 1.20935C5.39995 1.20935 3.71245 1.91248 2.44683 3.1781C-0.168799 5.79373 -0.168799 10.0687 2.44683 12.6844C3.71245 13.95 5.39995 14.6531 7.19995 14.6531C8.91558 14.6531 10.5187 14.0062 11.7843 12.8531L16.4812 16.65C16.5937 16.7344 16.7343 16.7906 16.875 16.7906C17.0718 16.7906 17.2406 16.7062 17.3531 16.5656C17.5781 16.2844 17.55 15.8906 17.2687 15.6656ZM7.19995 13.3875C5.73745 13.3875 4.38745 12.825 3.34683 11.7844C1.20933 9.64685 1.20933 6.18748 3.34683 4.0781C4.38745 3.03748 5.73745 2.47498 7.19995 2.47498C8.66245 2.47498 10.0125 3.03748 11.0531 4.0781C13.1906 6.2156 13.1906 9.67498 11.0531 11.7844C10.0406 12.825 8.66245 13.3875 7.19995 13.3875Z"
+                        fill=""
+                      />
+                    </svg>
+                  </button>
+
+                  {/* Search Suggestions Dropdown */}
+                  {showSuggestions && suggestions.length > 0 && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-3 rounded-lg shadow-lg z-50 max-h-[400px] overflow-y-auto">
+                      {suggestions.map((suggestion) => (
+                        <button
+                          key={suggestion.id}
+                          onClick={() => handleSuggestionClick(suggestion)}
+                          className="w-full flex items-center gap-3 p-3 hover:bg-gray-1 transition-colors border-b border-gray-2 last:border-b-0"
+                        >
+                          <div className="w-12 h-12 flex-shrink-0 bg-gray-1 rounded overflow-hidden flex items-center justify-center">
+                            {suggestion.mainImage !== '/images/placeholder.png' ? (
+                              <img
+                                src={suggestion.mainImage}
+                                alt={suggestion.name}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                  e.currentTarget.parentElement!.innerHTML = '<svg class="w-6 h-6 text-gray-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>';
+                                }}
+                              />
+                            ) : (
+                              <svg className="w-6 h-6 text-gray-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              </svg>
+                            )}
+                          </div>
+                          <div className="flex-1 text-left">
+                            <p className="text-sm font-medium text-dark line-clamp-1">
+                              {suggestion.name}
+                            </p>
+                            <p className="text-xs text-dark-4 capitalize">
+                              {suggestion.category}
+                            </p>
+                          </div>
+                          <div className="flex-shrink-0">
+                            <p className="text-sm font-semibold text-blue">
+                              ${suggestion.price}
+                            </p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Loading indicator */}
+                  {isSearching && searchQuery.length >= 2 && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-3 rounded-lg shadow-lg p-4 text-center">
+                      <p className="text-sm text-dark-4">{t("common.loading")}</p>
+                    </div>
+                  )}
+
+                  {/* No results message */}
+                  {!isSearching && searchQuery.length >= 2 && suggestions.length === 0 && showSuggestions === false && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-3 rounded-lg shadow-lg p-4 text-center">
+                      <p className="text-sm text-dark-4">{t("search.noResults")}</p>
+                    </div>
+                  )}
                 </div>
               </form>
             </div>
+
+            {/* Language Switcher */}
+            <div className="relative flex-shrink-0" ref={langRef}>
+              <button
+                onClick={() => setShowLangDropdown(!showLangDropdown)}
+                className="flex items-center gap-2 px-3 py-2.5 rounded-[5px] bg-gray-1 border border-gray-3 hover:border-blue transition-colors"
+                aria-label="Change Language"
+              >
+                <img
+                  src={currentLanguage.flag}
+                  alt={currentLanguage.name}
+                  className="w-6 h-4 object-cover rounded"
+                />
+                <span className="hidden sm:block text-sm font-medium text-dark">{currentLanguage.name}</span>
+                <svg
+                  className={`w-4 h-4 transition-transform ${showLangDropdown ? 'rotate-180' : ''}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* Language Dropdown */}
+              {showLangDropdown && (
+                <div className="absolute top-full right-0 mt-2 bg-white border border-gray-3 rounded-lg shadow-lg z-50 min-w-[160px] overflow-hidden">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => handleLanguageChange(lang.code)}
+                      className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-1 transition-colors ${
+                        locale === lang.code ? 'bg-blue/10 text-blue' : 'text-dark'
+                      }`}
+                    >
+                      <img
+                        src={lang.flag}
+                        alt={lang.name}
+                        className="w-8 h-6 object-cover rounded"
+                      />
+                      <span className="text-sm font-medium">{lang.name}</span>
+                      {locale === lang.code && (
+                        <svg
+                          className="w-4 h-4 ml-auto"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
           </div>
 
           {/* <!-- header top right --> */}
@@ -179,7 +393,7 @@ const Header = () => {
 
               <div>
                 <span className="block text-2xs text-dark-4 uppercase">
-                  24/7 SUPPORT
+                  {t("home.support247")}
                 </span>
                 <a href="tel:+19548887024" className="font-medium text-custom-sm text-dark hover:text-blue duration-200">
                   +1 (954) 888-7024
@@ -209,7 +423,7 @@ const Header = () => {
 
                       <div>
                         <span className="block text-2xs text-dark-4 uppercase">
-                          account
+                          {t("common.account")}
                         </span>
                         <p className="font-medium text-custom-sm text-dark">
                           {user.name}
@@ -269,10 +483,10 @@ const Header = () => {
 
                     <div>
                       <span className="block text-2xs text-dark-4 uppercase">
-                        account
+                        {t("common.account")}
                       </span>
                       <p className="font-medium text-custom-sm text-dark">
-                        Sign In
+                        {t("auth.signIn")}
                       </p>
                     </div>
                   </Link>
@@ -321,7 +535,7 @@ const Header = () => {
 
                   <div>
                     <span className="block text-2xs text-dark-4 uppercase">
-                      cart
+                      {t("common.cart")}
                     </span>
                     <p className="font-medium text-custom-sm text-dark">
                       ${totalPrice}
@@ -448,7 +662,7 @@ const Header = () => {
                         fill=""
                       />
                     </svg>
-                    Become a Supplier
+                    {t("nav.supplierRegistration")}
                   </Link>
                 </li>
               </ul>

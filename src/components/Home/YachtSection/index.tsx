@@ -4,8 +4,10 @@ import SingleItem from "../BestSeller/SingleItem";
 import Image from "next/image";
 import Link from "next/link";
 import { productsService } from "@/lib/api/services/products.service";
+import { useTranslations } from "next-intl";
 
 const YachtSection = () => {
+  const t = useTranslations("home");
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,7 +32,7 @@ const YachtSection = () => {
     return (
       <section className="overflow-hidden pb-16.5">
         <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
-          <div className="text-center py-10">Loading yachts...</div>
+          <div className="text-center py-10">{t("loadingYachts")}</div>
         </div>
       </section>
     );
@@ -53,10 +55,10 @@ const YachtSection = () => {
                 width={17}
                 height={17}
               />
-              Premium Collection
+              {t("premiumCollection")}
             </span>
             <h2 className="font-semibold text-xl xl:text-heading-5 text-dark">
-              Luxury Yachts
+              {t("luxuryYachts")}
             </h2>
           </div>
         </div>
@@ -72,7 +74,7 @@ const YachtSection = () => {
             href="/shop"
             className="inline-flex font-medium text-custom-sm py-3 px-7 sm:px-12.5 rounded-md border-gray-3 border bg-gray-1 text-dark ease-out duration-200 hover:bg-dark hover:text-white hover:border-transparent"
           >
-            View All Yachts
+            {t("viewAllYachts")}
           </Link>
         </div>
       </div>

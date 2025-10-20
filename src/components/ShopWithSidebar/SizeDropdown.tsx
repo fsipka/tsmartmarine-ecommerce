@@ -1,7 +1,9 @@
 "use client";
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const SizeDropdown = () => {
+  const t = useTranslations();
   const [toggleDropdown, setToggleDropdown] = useState(true);
   return (
     <div className="bg-white shadow-1 rounded-lg">
@@ -11,7 +13,7 @@ const SizeDropdown = () => {
           toggleDropdown && "shadow-filter"
         }`}
       >
-        <p className="text-dark">Size</p>
+        <p className="text-dark">{t("product.size")}</p>
         <button
           onClick={() => setToggleDropdown(!toggleDropdown)}
           aria-label="button for size dropdown"

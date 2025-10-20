@@ -9,9 +9,10 @@ import { addItemToCart } from "@/redux/features/cart-slice";
 import Image from "next/image";
 import Link from "next/link";
 import { addItemToWishlist } from "@/redux/features/wishlist-slice";
-import { getSession } from "@/lib/auth/session";
+import { useTranslations } from "next-intl";
 
 const SingleItem = ({ item }: { item: Product }) => {
+  const t = useTranslations("common");
   const { openModal } = useModalContext();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -40,22 +41,18 @@ const SingleItem = ({ item }: { item: Product }) => {
     );
   };
 
-  // Get the image URL with fallback to company logo
+  // Get the image URL with fallback
   const getImageUrl = () => {
     // If product has preview images, use the first one
     if (item.imgs?.previews && item.imgs.previews.length > 0 && item.imgs.previews[0]) {
       return item.imgs.previews[0];
     }
 
-    // Otherwise, try to get company logo from session
-    const session = getSession();
-    if (session?.user?.companyLogoUrl) {
-      return session.user.companyLogoUrl;
-    }
-
-    // Final fallback to default image
-    return '/images/products/product-01.png';
+    // Return null to show placeholder icon
+    return null;
   };
+
+  const imageUrl = getImageUrl();
 
   return (
     <div className="group">
@@ -108,15 +105,34 @@ const SingleItem = ({ item }: { item: Product }) => {
           </span>
         </div>
 
-        <div className="flex justify-center items-center">
-          <Image
-            src={getImageUrl()}
-            alt={item.title || 'Product'}
-            width={280}
-            height={280}
-            className="object-contain"
-            unoptimized={getImageUrl().startsWith('http')}
-          />
+        <div className="flex justify-center items-center min-h-[280px]">
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt={item.title || 'Product'}
+              width={280}
+              height={280}
+              className="object-contain"
+              unoptimized={imageUrl.startsWith('http')}
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center text-gray-4">
+              <svg
+                className="w-24 h-24 mb-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              <p className="text-sm">{t("noImage") || "No Image"}</p>
+            </div>
+          )}
         </div>
 
         <div className="absolute right-0 bottom-0 translate-x-full u-w-full flex flex-col gap-2 p-5.5 ease-linear duration-300 group-hover:translate-x-0">

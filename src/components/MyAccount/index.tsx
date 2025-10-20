@@ -8,8 +8,10 @@ import Orders from "../Orders";
 import { useAuth } from "@/contexts/AuthContext";
 import { orderService, Order } from "@/lib/api/services/order.service";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 const MyAccount = () => {
+  const t = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -77,7 +79,7 @@ const MyAccount = () => {
 
   return (
     <>
-      <Breadcrumb title={"My Account"} pages={["my account"]} />
+      <Breadcrumb title={t("account.myAccount")} pages={[t("account.myAccount").toLowerCase()]} />
 
       <section className="overflow-hidden py-20 bg-gray-2">
         <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
@@ -151,7 +153,7 @@ const MyAccount = () => {
                           fill=""
                         />
                       </svg>
-                      Dashboard
+                      {t("account.dashboard")}
                     </button>
                     <button
                       onClick={() => setActiveTab("orders")}
@@ -188,7 +190,7 @@ const MyAccount = () => {
                           fill=""
                         />
                       </svg>
-                      Orders
+                      {t("account.orders")}
                     </button>
 
                     <button
@@ -216,7 +218,7 @@ const MyAccount = () => {
                           fill=""
                         />
                       </svg>
-                      Downloads
+                      {t("account.downloads")}
                     </button>
 
                     <button
@@ -246,7 +248,7 @@ const MyAccount = () => {
                           fill=""
                         />
                       </svg>
-                      Addresses
+                      {t("account.addresses")}
                     </button>
 
                     <button
@@ -278,7 +280,7 @@ const MyAccount = () => {
                           fill=""
                         />
                       </svg>
-                      Account Details
+                      {t("account.accountDetails")}
                     </button>
 
                     <button
@@ -306,7 +308,7 @@ const MyAccount = () => {
                           fill=""
                         />
                       </svg>
-                      Logout
+                      {t("account.logout")}
                     </button>
                   </div>
                 </div>
@@ -324,20 +326,18 @@ const MyAccount = () => {
               }`}
             >
               <p className="text-dark">
-                Hello Annie (not Annie?
+                {t("account.hello")} {user.name} ({t("account.notYou")} {user.name}?
                 <a
                   href="#"
                   className="text-red ease-out duration-200 hover:underline"
                 >
-                  Log Out
+                  {t("account.logOut")}
                 </a>
                 )
               </p>
 
               <p className="text-custom-sm mt-4">
-                From your account dashboard you can view your recent orders,
-                manage your shipping and billing addresses, and edit your
-                password and account details.
+                {t("account.dashboardWelcome")}
               </p>
             </div>
             {/* <!-- dashboard tab content end -->
@@ -364,7 +364,7 @@ const MyAccount = () => {
                 activeTab === "downloads" ? "block" : "hidden"
               }`}
             >
-              <p>You don&apos;t have any download</p>
+              <p>{t("account.noDownloads")}</p>
             </div>
             {/* <!-- downloads tab content end -->
 
@@ -377,7 +377,7 @@ const MyAccount = () => {
               <div className="xl:max-w-[370px] w-full bg-white shadow-1 rounded-xl">
                 <div className="flex items-center justify-between py-5 px-4 sm:pl-7.5 sm:pr-6 border-b border-gray-3">
                   <p className="font-medium text-xl text-dark">
-                    Shipping Address
+                    {t("account.shippingAddress")}
                   </p>
 
                   <button
@@ -509,7 +509,7 @@ const MyAccount = () => {
               <div className="xl:max-w-[370px] w-full bg-white shadow-1 rounded-xl">
                 <div className="flex items-center justify-between py-5 px-4 sm:pl-7.5 sm:pr-6 border-b border-gray-3">
                   <p className="font-medium text-xl text-dark">
-                    Billing Address
+                    {t("account.billingAddress")}
                   </p>
 
                   <button
@@ -651,30 +651,30 @@ const MyAccount = () => {
                   <div className="flex flex-col lg:flex-row gap-5 sm:gap-8 mb-5">
                     <div className="w-full">
                       <label htmlFor="firstName" className="block mb-2.5">
-                        First Name <span className="text-red">*</span>
+                        {t("checkout.firstName")} <span className="text-red">*</span>
                       </label>
 
                       <input
                         type="text"
                         name="firstName"
                         id="firstName"
-                        placeholder="Jhon"
-                        defaultValue="Jhon"
+                        placeholder={t("contact.firstNamePlaceholder")}
+                        defaultValue={t("contact.firstNamePlaceholder")}
                         className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                       />
                     </div>
 
                     <div className="w-full">
                       <label htmlFor="lastName" className="block mb-2.5">
-                        Last Name <span className="text-red">*</span>
+                        {t("checkout.lastName")} <span className="text-red">*</span>
                       </label>
 
                       <input
                         type="text"
                         name="lastName"
                         id="lastName"
-                        placeholder="Deo"
-                        defaultValue="Deo"
+                        placeholder={t("contact.lastNamePlaceholder")}
+                        defaultValue={t("contact.lastNamePlaceholder")}
                         className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                       />
                     </div>
@@ -682,14 +682,14 @@ const MyAccount = () => {
 
                   <div className="mb-5">
                     <label htmlFor="countryName" className="block mb-2.5">
-                      Country/ Region <span className="text-red">*</span>
+                      {t("checkout.country")} <span className="text-red">*</span>
                     </label>
 
                     <div className="relative">
                       <select className="w-full bg-gray-1 rounded-md border border-gray-3 text-dark-4 py-3 pl-5 pr-9 duration-200 appearance-none outline-none focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20">
-                        <option value="0">Australia</option>
-                        <option value="1">America</option>
-                        <option value="2">England</option>
+                        <option value="0">{t("account.australia")}</option>
+                        <option value="1">{t("account.america")}</option>
+                        <option value="2">{t("account.england")}</option>
                       </select>
 
                       <span className="absolute right-4 top-1/2 -translate-y-1/2 text-dark-4">

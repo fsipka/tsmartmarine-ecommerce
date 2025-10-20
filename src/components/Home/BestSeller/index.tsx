@@ -4,8 +4,11 @@ import SingleItem from "./SingleItem";
 import Image from "next/image";
 import Link from "next/link";
 import { productsService } from "@/lib/api/services/products.service";
+import { useTranslations } from "next-intl";
 
 const BestSeller = () => {
+  const t = useTranslations("home");
+  const tc = useTranslations("common");
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,7 +33,7 @@ const BestSeller = () => {
     return (
       <section className="overflow-hidden">
         <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
-          <div className="text-center py-10">Loading products...</div>
+          <div className="text-center py-10">{t("loadingProducts")}</div>
         </div>
       </section>
     );
@@ -49,10 +52,10 @@ const BestSeller = () => {
                 width={17}
                 height={17}
               />
-              This Month
+              {t("thisMonth")}
             </span>
             <h2 className="font-semibold text-xl xl:text-heading-5 text-dark">
-              Best Sellers
+              {t("bestSellers")}
             </h2>
           </div>
         </div>
@@ -69,7 +72,7 @@ const BestSeller = () => {
             href="/shop"
             className="inline-flex font-medium text-custom-sm py-3 px-7 sm:px-12.5 rounded-md border-gray-3 border bg-gray-1 text-dark ease-out duration-200 hover:bg-dark hover:text-white hover:border-transparent"
           >
-            View All
+            {tc("viewAll")}
           </Link>
         </div>
       </div>

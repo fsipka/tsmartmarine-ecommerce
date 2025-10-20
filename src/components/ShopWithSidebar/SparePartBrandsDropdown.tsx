@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface SparePartBrand {
   id: number | string;
@@ -72,6 +73,7 @@ const SparePartBrandsDropdown = ({
   onBrandSelect,
   selectedBrands
 }: SparePartBrandsDropdownProps) => {
+  const t = useTranslations();
   const [toggleDropdown, setToggleDropdown] = useState(true);
 
   // Create "All" brand option
@@ -89,7 +91,7 @@ const SparePartBrandsDropdown = ({
           toggleDropdown && "shadow-filter"
         }`}
       >
-        <p className="text-dark font-medium">Spare Part Brands</p>
+        <p className="text-dark font-medium">{t("product.sparePartBrands")}</p>
         <button
           aria-label="button for spare part brands dropdown"
           className={`text-dark ease-out duration-200 ${
@@ -149,7 +151,7 @@ const SparePartBrandsDropdown = ({
               />
             </svg>
           </div>
-          <span>All</span>
+          <span>{t("common.all")}</span>
         </button>
 
         {brands.map((brand) => (

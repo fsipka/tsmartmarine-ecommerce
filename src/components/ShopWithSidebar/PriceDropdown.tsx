@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslations } from "next-intl";
 import RangeSlider from 'react-range-slider-input';
 import 'react-range-slider-input/dist/style.css';
 
@@ -9,6 +10,7 @@ interface PriceDropdownProps {
 }
 
 const PriceDropdown = ({ onPriceChange, minPrice = 0, maxPrice = 10000000 }: PriceDropdownProps) => {
+  const t = useTranslations();
   const [toggleDropdown, setToggleDropdown] = useState(true);
 
   const [selectedPrice, setSelectedPrice] = useState({
@@ -22,7 +24,7 @@ const PriceDropdown = ({ onPriceChange, minPrice = 0, maxPrice = 10000000 }: Pri
         onClick={() => setToggleDropdown(!toggleDropdown)}
         className="cursor-pointer flex items-center justify-between py-3 pl-6 pr-5.5"
       >
-        <p className="text-dark">Price</p>
+        <p className="text-dark">{t("product.price")}</p>
         <button
           onClick={() => setToggleDropdown(!toggleDropdown)}
           id="price-dropdown-btn"

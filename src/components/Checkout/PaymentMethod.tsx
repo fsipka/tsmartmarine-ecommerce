@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { PaymentType } from "@/types/order";
 import { loadStripe, StripeCardElement, Stripe } from "@stripe/stripe-js";
@@ -13,6 +14,7 @@ interface PaymentMethodProps {
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 const PaymentMethod: React.FC<PaymentMethodProps> = ({ paymentType, onChange, onStripeReady }) => {
+  const t = useTranslations();
   const cardElementRef = useRef<StripeCardElement | null>(null);
   const cardContainerRef = useRef<HTMLDivElement>(null);
   const stripeInstanceRef = useRef<Stripe | null>(null);
@@ -92,7 +94,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({ paymentType, onChange, on
   return (
     <div className="bg-white shadow-1 rounded-[10px] mt-7.5">
       <div className="border-b border-gray-3 py-5 px-4 sm:px-8.5">
-        <h3 className="font-medium text-xl text-dark">Payment Method</h3>
+        <h3 className="font-medium text-xl text-dark">{t("checkout.paymentMethod")}</h3>
       </div>
 
       <div className="p-4 sm:p-8.5">
@@ -132,7 +134,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({ paymentType, onChange, on
                 </div>
 
                 <div className="border-l border-gray-4 pl-2.5">
-                  <p>Direct bank transfer</p>
+                  <p>{t("checkout.directBankTransfer")}</p>
                 </div>
               </div>
             </div>
@@ -174,7 +176,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({ paymentType, onChange, on
                 </svg>
 
                 <div className="border-l border-gray-4 pl-2.5">
-                  <p>Credit Card (Stripe)</p>
+                  <p>{t("checkout.creditCardStripe")}</p>
                 </div>
               </div>
             </div>
@@ -188,7 +190,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({ paymentType, onChange, on
                 className="p-3 bg-white rounded border border-gray-3"
               />
               <p className="text-xs text-gray-4 mt-2">
-                Your payment information is secure and encrypted.
+                {t("checkout.paymentSecure")}
               </p>
             </div>
           )}

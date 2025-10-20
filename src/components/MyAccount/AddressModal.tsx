@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 const AddressModal = ({ isOpen, closeModal }) => {
+  const t = useTranslations();
   useEffect(() => {
     // closing modal while clicking outside
     function handleClickOutside(event) {
@@ -56,7 +58,7 @@ const AddressModal = ({ isOpen, closeModal }) => {
               <div className="flex flex-col lg:flex-row gap-5 sm:gap-8 mb-5">
                 <div className="w-full">
                   <label htmlFor="name" className="block mb-2.5">
-                    Name
+                    {t("contact.name")}
                   </label>
 
                   <input
@@ -69,7 +71,7 @@ const AddressModal = ({ isOpen, closeModal }) => {
 
                 <div className="w-full">
                   <label htmlFor="email" className="block mb-2.5">
-                    Email
+                    {t("contact.email")}
                   </label>
 
                   <input
@@ -84,7 +86,7 @@ const AddressModal = ({ isOpen, closeModal }) => {
               <div className="flex flex-col lg:flex-row gap-5 sm:gap-8 mb-5">
                 <div className="w-full">
                   <label htmlFor="phone" className="block mb-2.5">
-                    Phone
+                    {t("checkout.phone")}
                   </label>
 
                   <input
@@ -97,7 +99,7 @@ const AddressModal = ({ isOpen, closeModal }) => {
 
                 <div className="w-full">
                   <label htmlFor="address" className="block mb-2.5">
-                    Address
+                    {t("checkout.address")}
                   </label>
 
                   <input
@@ -113,7 +115,7 @@ const AddressModal = ({ isOpen, closeModal }) => {
                 type="submit"
                 className="inline-flex font-medium text-white bg-blue py-3 px-7 rounded-md ease-out duration-200 hover:bg-blue-dark"
               >
-                Save Changes
+                {t("account.saveChanges")}
               </button>
             </form>
           </div>

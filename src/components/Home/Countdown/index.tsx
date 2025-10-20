@@ -3,8 +3,10 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { productsService } from "@/lib/api/services/products.service";
+import { useTranslations } from "next-intl";
 
 const CounDown = () => {
+  const t = useTranslations();
   const [days, setDays] = useState(0);
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
@@ -46,11 +48,15 @@ const CounDown = () => {
   }, []);
 
   const getImageUrl = () => {
+    // Try yacht images
     if (yacht?.imgs?.previews && yacht.imgs.previews.length > 0 && yacht.imgs.previews[0]) {
       return yacht.imgs.previews[0];
     }
-    return '/images/countdown/countdown-01.png';
+    // Return null to show placeholder icon
+    return null;
   };
+
+  const imageUrl = getImageUrl();
 
   return (
     <section className="overflow-hidden py-20">
@@ -58,15 +64,15 @@ const CounDown = () => {
         <div className="relative overflow-hidden z-1 rounded-lg bg-[#D0E9F3] p-4 sm:p-7.5 lg:p-10 xl:p-15">
           <div className="max-w-[422px] w-full">
             <span className="block font-medium text-custom-1 text-blue mb-2.5">
-              Don&apos;t Miss!!
+              {t("home.dontMiss")}
             </span>
 
             <h2 className="font-bold text-dark text-xl lg:text-heading-4 xl:text-heading-3 mb-3">
-              {yacht ? yacht.title : "Luxury Yacht Experience"}
+              {yacht ? yacht.title : t("home.luxuryExperience")}
             </h2>
 
             <p className="text-dark-4">
-              {yacht ? (yacht.description || "Experience luxury on the water with this exclusive yacht.") : "Special offer on premium yachts"}
+              {yacht ? (yacht.description || t("home.luxuryExperience")) : t("home.specialOffer")}
             </p>
 
             {/* <!-- Countdown timer --> */}
@@ -85,7 +91,7 @@ const CounDown = () => {
                   {days < 10 ? "0" + days : days}{" "}
                 </span>
                 <span className="block text-custom-sm text-dark text-center">
-                  Days
+                  {t("home.days")}
                 </span>
               </div>
 
@@ -99,7 +105,7 @@ const CounDown = () => {
                   {hours < 10 ? "0" + hours : hours}{" "}
                 </span>
                 <span className="block text-custom-sm text-dark text-center">
-                  Hours
+                  {t("home.hours")}
                 </span>
               </div>
 
@@ -112,7 +118,7 @@ const CounDown = () => {
                   {minutes < 10 ? "0" + minutes : minutes}{" "}
                 </span>
                 <span className="block text-custom-sm text-dark text-center">
-                  Minutes
+                  {t("home.minutes")}
                 </span>
               </div>
 
@@ -125,7 +131,7 @@ const CounDown = () => {
                   {seconds < 10 ? "0" + seconds : seconds}{" "}
                 </span>
                 <span className="block text-custom-sm text-dark text-center">
-                  Seconds
+                  {t("home.seconds")}
                 </span>
               </div>
             </div>
@@ -136,7 +142,7 @@ const CounDown = () => {
                 href={yacht ? `/shop-details?id=${yacht.id}&type=yacht` : "/shop-details"}
                 className="inline-flex font-medium text-custom-sm text-white bg-blue py-3 px-9.5 rounded-md ease-out duration-200 hover:bg-blue-dark"
               >
-                View Details
+                {t("home.viewDetails") || "View Details"}
               </Link>
               {yacht && (
                 <div className="inline-flex items-center gap-2">
@@ -162,14 +168,33 @@ const CounDown = () => {
             height={482}
           />
           {yacht && (
-            <Image
-              src={getImageUrl()}
-              alt={yacht.title || "Yacht"}
-              className="hidden lg:block absolute right-4 xl:right-33 bottom-4 xl:bottom-10 -z-1 object-contain"
-              width={411}
-              height={376}
-              unoptimized={getImageUrl().startsWith('http')}
-            />
+            imageUrl ? (
+              <Image
+                src={imageUrl}
+                alt={yacht.title || "Yacht"}
+                className="hidden lg:block absolute right-4 xl:right-33 bottom-4 xl:bottom-10 -z-1 object-contain"
+                width={411}
+                height={376}
+                unoptimized={imageUrl.startsWith('http')}
+              />
+            ) : (
+              <div className="hidden lg:flex absolute right-4 xl:right-33 bottom-4 xl:bottom-10 -z-1 flex-col items-center justify-center text-gray-4">
+                <svg
+                  className="w-32 h-32 mb-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                <p className="text-sm">{t("common.noImage") || "No Image"}</p>
+              </div>
+            )
           )}
         </div>
       </div>

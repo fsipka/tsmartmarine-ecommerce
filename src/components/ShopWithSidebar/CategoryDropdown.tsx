@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface Category {
   id: number | string;
@@ -163,6 +164,7 @@ interface CategoryDropdownProps {
 }
 
 const CategoryDropdown = ({ categories, onLoadSubcategories, isLoadingSubcategories, onCategorySelect, selectedCategories }: CategoryDropdownProps) => {
+  const t = useTranslations();
   const [toggleDropdown, setToggleDropdown] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [loadedForSearch, setLoadedForSearch] = useState(false);
@@ -236,7 +238,7 @@ const CategoryDropdown = ({ categories, onLoadSubcategories, isLoadingSubcategor
           toggleDropdown && "shadow-filter"
         }`}
       >
-        <p className="text-dark font-medium">Categories</p>
+        <p className="text-dark font-medium">{t("common.categories")}</p>
         <button
           aria-label="button for category dropdown"
           className={`text-dark ease-out duration-200 ${
@@ -271,7 +273,7 @@ const CategoryDropdown = ({ categories, onLoadSubcategories, isLoadingSubcategor
         <div className="px-6 pt-4 pb-2">
           <input
             type="text"
-            placeholder="Search categories..."
+            placeholder={t("product.searchCategories")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onClick={(e) => e.stopPropagation()}
@@ -294,7 +296,7 @@ const CategoryDropdown = ({ categories, onLoadSubcategories, isLoadingSubcategor
               />
             ))
           ) : (
-            <p className="text-sm text-gray-4 text-center py-2">No categories found</p>
+            <p className="text-sm text-gray-4 text-center py-2">{t("product.noCategoriesFound")}</p>
           )}
         </div>
       </div>

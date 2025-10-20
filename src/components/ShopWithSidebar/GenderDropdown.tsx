@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const GenderItem = ({ category }) => {
   const [selected, setSelected] = useState(false);
@@ -49,6 +50,7 @@ const GenderItem = ({ category }) => {
 };
 
 const GenderDropdown = ({ genders }) => {
+  const t = useTranslations();
   const [toggleDropdown, setToggleDropdown] = useState(true);
 
   return (
@@ -59,7 +61,7 @@ const GenderDropdown = ({ genders }) => {
           toggleDropdown && "shadow-filter"
         }`}
       >
-        <p className="text-dark">Gender</p>
+        <p className="text-dark">{t("product.gender")}</p>
         <button
           onClick={() => setToggleDropdown(!toggleDropdown)}
           aria-label="button for gender dropdown"

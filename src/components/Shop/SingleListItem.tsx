@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-
+import { useTranslations } from "next-intl";
 import { Product } from "@/types/product";
 import { useModalContext } from "@/app/context/QuickViewModalContext";
 import { updateQuickView } from "@/redux/features/quickView-slice";
@@ -12,6 +12,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 const SingleListItem = ({ item }: { item: Product }) => {
+  const t = useTranslations("common");
   const { openModal } = useModalContext();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -82,7 +83,7 @@ const SingleListItem = ({ item }: { item: Product }) => {
               onClick={() => handleAddToCart()}
               className="inline-flex font-medium text-custom-sm py-[7px] px-5 rounded-[5px] bg-blue text-white ease-out duration-200 hover:bg-blue-dark"
             >
-              Add to cart
+              {t("addToCart")}
             </button>
 
             <button

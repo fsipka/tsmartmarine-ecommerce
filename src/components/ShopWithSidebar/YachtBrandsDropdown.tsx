@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface YachtModel {
   id: number | string;
@@ -21,6 +22,7 @@ interface YachtBrandItemProps {
   selectedBrands?: Set<number | string>;
   selectedModels?: Set<number | string>;
   searchQuery?: string;
+  t: any;
 }
 
 const YachtBrandItem = ({
@@ -30,7 +32,8 @@ const YachtBrandItem = ({
   onModelSelect,
   selectedBrands,
   selectedModels,
-  searchQuery
+  searchQuery,
+  t
 }: YachtBrandItemProps) => {
   const [expanded, setExpanded] = useState(false);
   const hasModels = brand.yachtModels && brand.yachtModels.length > 0;
@@ -154,7 +157,7 @@ const YachtBrandItem = ({
                     />
                   </svg>
                 </div>
-                <span>All</span>
+                <span>{t("common.all")}</span>
               </button>
             );
           })()}
@@ -216,6 +219,7 @@ const YachtBrandsDropdown = ({
   selectedBrands,
   selectedModels
 }: YachtBrandsDropdownProps) => {
+  const t = useTranslations();
   const [toggleDropdown, setToggleDropdown] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -269,7 +273,7 @@ const YachtBrandsDropdown = ({
           toggleDropdown && "shadow-filter"
         }`}
       >
-        <p className="text-dark font-medium">Yacht Brands</p>
+        <p className="text-dark font-medium">{t("product.yachtBrands")}</p>
         <button
           aria-label="button for yacht brands dropdown"
           className={`text-dark ease-out duration-200 ${
@@ -343,7 +347,7 @@ const YachtBrandsDropdown = ({
                 />
               </svg>
             </div>
-            <span>All</span>
+            <span>{t("common.all")}</span>
           </button>
 
           {filteredBrands.length > 0 ? (
@@ -356,10 +360,11 @@ const YachtBrandsDropdown = ({
                 selectedBrands={selectedBrands}
                 selectedModels={selectedModels}
                 searchQuery={searchQuery}
+                t={t}
               />
             ))
           ) : (
-            <p className="text-sm text-gray-4 text-center py-2">No brands found</p>
+            <p className="text-sm text-gray-4 text-center py-2">{t("product.noBrandsFound")}</p>
           )}
         </div>
       </div>

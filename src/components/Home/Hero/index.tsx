@@ -6,10 +6,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { productsService, Product } from "@/lib/api/services/products.service";
 import { formatPrice } from "@/lib/utils/format";
+import { useTranslations } from "next-intl";
 
 const CONTENT_BASE_URL = 'https://marineapi.tsmart.ai/contents/';
 
 const Hero = () => {
+  const t = useTranslations("home");
+  const tCommon = useTranslations("common");
   const [sideProducts, setSideProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -91,10 +94,10 @@ const Hero = () => {
               {isLoading ? (
                 <>
                   <div className="w-full relative rounded-[10px] bg-white p-4 sm:p-7.5 flex items-center justify-center h-[200px]">
-                    <p className="text-dark-4">Loading...</p>
+                    <p className="text-dark-4">{tCommon("loading")}</p>
                   </div>
                   <div className="w-full relative rounded-[10px] bg-white p-4 sm:p-7.5 flex items-center justify-center h-[200px]">
-                    <p className="text-dark-4">Loading...</p>
+                    <p className="text-dark-4">{tCommon("loading")}</p>
                   </div>
                 </>
               ) : sideProducts.length > 0 ? (
@@ -114,7 +117,7 @@ const Hero = () => {
 
                           <div>
                             <p className="font-medium text-dark-4 text-custom-sm mb-1.5">
-                              limited time offer
+                              {t("limitedTimeOffer")}
                             </p>
                             <span className="flex items-center gap-3">
                               <span className="font-medium text-heading-5 text-red">
@@ -145,7 +148,7 @@ const Hero = () => {
               ) : (
                 <>
                   <div className="w-full relative rounded-[10px] bg-white p-4 sm:p-7.5">
-                    <p className="text-dark-4 text-center">No products available</p>
+                    <p className="text-dark-4 text-center">{tCommon("noProductsAvailable")}</p>
                   </div>
                 </>
               )}

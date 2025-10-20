@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import { StripeCardElement, Stripe } from "@stripe/stripe-js";
 import { useAppSelector } from "@/redux/store";
@@ -25,6 +26,7 @@ import Shipping from "./Shipping";
 import PaymentMethod from "./PaymentMethod";
 
 const Checkout = () => {
+  const t = useTranslations();
   const router = useRouter();
   const dispatch = useDispatch();
   const cartItems = useAppSelector(selectCartItems);
@@ -57,7 +59,7 @@ const Checkout = () => {
       setIsAuthenticated(valid);
 
       if (!valid) {
-        toast.error("Please login to proceed with checkout");
+        toast.error(t("errors.unauthorized"));
         setTimeout(() => {
           router.push("/signin");
         }, 2000);
@@ -115,13 +117,13 @@ const Checkout = () => {
     e.preventDefault();
 
     if (!isAuthenticated) {
-      toast.error("Please login to place an order");
+      toast.error(t("errors.unauthorized"));
       router.push("/signin");
       return;
     }
 
     if (cartItems.length === 0) {
-      toast.error("Your cart is empty");
+      toast.error(t("cart.emptyCart"));
       return;
     }
 
@@ -129,7 +131,7 @@ const Checkout = () => {
     if (!billingDetails.firstName || !billingDetails.lastName || !billingDetails.email ||
         !billingDetails.phone || !billingDetails.streetAddress || !billingDetails.city ||
         !billingDetails.country) {
-      toast.error("Please fill in all required billing details");
+      toast.error(t("validation.required"));
       return;
     }
 
@@ -138,14 +140,14 @@ const Checkout = () => {
       if (!shippingDetails.firstName || !shippingDetails.lastName ||
           !shippingDetails.streetAddress || !shippingDetails.city ||
           !shippingDetails.country) {
-        toast.error("Please fill in all required shipping details");
+        toast.error(t("validation.required"));
         return;
       }
     }
 
     // Validate Stripe card if Credit Card payment is selected
     if (paymentType === PaymentType.CreditCard && !stripeCardElement) {
-      toast.error("Please enter your card details");
+      toast.error(t("validation.required"));
       return;
     }
 
@@ -183,16 +185,16 @@ const Checkout = () => {
           );
 
           if (stripeError) {
-            throw new Error(stripeError.message || "Payment failed");
+            throw new Error(stripeError.message || t("errors.somethingWentWrong"));
           }
 
           if (paymentIntent?.status === 'succeeded') {
             paymentStatus = PaymentStatus.Paid;
-            toast.success("Payment successful!");
+            toast.success(t("common.success"));
           }
         } catch (paymentError: any) {
           console.error("Stripe payment error:", paymentError);
-          toast.error(paymentError.message || "Payment processing failed");
+          toast.error(paymentError.message || t("errors.somethingWentWrong"));
           setIsLoading(false);
           return;
         }
@@ -219,7 +221,7 @@ const Checkout = () => {
       // Clear cart after successful order
       dispatch(removeAllItemsFromCart());
 
-      toast.success("Order placed successfully!");
+      toast.success(t("checkout.orderPlaced"));
 
       // Redirect to order success page
       setTimeout(() => {
@@ -227,7 +229,7 @@ const Checkout = () => {
       }, 1500);
     } catch (error: any) {
       console.error("Order creation failed:", error);
-      toast.error(error?.response?.data?.message || "Failed to place order. Please try again.");
+      toast.error(error?.response?.data?.message || t("errors.somethingWentWrong"));
     } finally {
       setIsLoading(false);
     }
@@ -238,8 +240,8 @@ const Checkout = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-4">Authentication Required</h2>
-          <p>Redirecting to login...</p>
+          <h2 className="text-2xl font-semibold mb-4">{t("checkout.authenticationRequired")}</h2>
+          <p>{t("common.loading")}</p>
         </div>
       </div>
     );
@@ -247,7 +249,7 @@ const Checkout = () => {
 
   return (
     <>
-      <Breadcrumb title={"Checkout"} pages={["checkout"]} />
+      <Breadcrumb title={t("common.checkout")} pages={["checkout"]} />
       <section className="overflow-hidden py-20 bg-gray-2">
         <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
           <form onSubmit={handleSubmit}>
@@ -272,7 +274,7 @@ const Checkout = () => {
                 <div className="bg-white shadow-1 rounded-[10px] p-4 sm:p-8.5 mt-7.5">
                   <div>
                     <label htmlFor="notes" className="block mb-2.5">
-                      Other Notes (optional)
+                      {t("contact.message")} (optional)
                     </label>
 
                     <textarea
@@ -281,7 +283,7 @@ const Checkout = () => {
                       rows={5}
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
-                      placeholder="Notes about your order, e.g. special notes for delivery."
+                      placeholder={t("contact.messagePlaceholder")}
                       className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full p-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                     ></textarea>
                   </div>
@@ -294,7 +296,7 @@ const Checkout = () => {
                 <div className="bg-white shadow-1 rounded-[10px]">
                   <div className="border-b border-gray-3 py-5 px-4 sm:px-8.5">
                     <h3 className="font-medium text-xl text-dark">
-                      Your Order
+                      {t("checkout.orderSummary")}
                     </h3>
                   </div>
 
@@ -302,11 +304,11 @@ const Checkout = () => {
                     {/* Title */}
                     <div className="flex items-center justify-between py-5 border-b border-gray-3">
                       <div>
-                        <h4 className="font-medium text-dark">Product</h4>
+                        <h4 className="font-medium text-dark">{t("common.products")}</h4>
                       </div>
                       <div>
                         <h4 className="font-medium text-dark text-right">
-                          Subtotal
+                          {t("cart.subtotal")}
                         </h4>
                       </div>
                     </div>
@@ -333,7 +335,7 @@ const Checkout = () => {
                     {/* Total */}
                     <div className="flex items-center justify-between pt-5">
                       <div>
-                        <p className="font-medium text-lg text-dark">Total</p>
+                        <p className="font-medium text-lg text-dark">{t("cart.total")}</p>
                       </div>
                       <div>
                         <p className="font-medium text-lg text-dark text-right">
@@ -362,7 +364,7 @@ const Checkout = () => {
                     isLoading ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
-                  {isLoading ? "Processing..." : "Place Order"}
+                  {isLoading ? t("common.processing") : t("checkout.placeOrder")}
                 </button>
               </div>
             </div>

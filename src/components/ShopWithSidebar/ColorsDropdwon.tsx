@@ -1,7 +1,9 @@
 "use client";
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const ColorsDropdwon = () => {
+  const t = useTranslations();
   const [toggleDropdown, setToggleDropdown] = useState(true);
   const [activeColor, setActiveColor] = useState("blue");
 
@@ -15,7 +17,7 @@ const ColorsDropdwon = () => {
           toggleDropdown && "shadow-filter"
         }`}
       >
-        <p className="text-dark">Colors</p>
+        <p className="text-dark">{t("product.colors")}</p>
         <button
           aria-label="button for colors dropdown"
           className={`text-dark ease-out duration-200 ${

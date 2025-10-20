@@ -1,12 +1,14 @@
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 const ShippingMethod = () => {
+  const t = useTranslations();
   const [shippingMethod, setShippingMethod] = useState("free");
   return (
     <div className="bg-white shadow-1 rounded-[10px] mt-7.5">
       <div className="border-b border-gray-3 py-5 px-4 sm:px-8.5">
-        <h3 className="font-medium text-xl text-dark">Shipping Method</h3>
+        <h3 className="font-medium text-xl text-dark">{t("checkout.shippingMethod")}</h3>
       </div>
 
       <div className="p-4 sm:p-8.5">
@@ -32,7 +34,7 @@ const ShippingMethod = () => {
                 }`}
               ></div>
             </div>
-            Free Shipping
+            {t("home.freeShipping")}
           </label>
 
           <label
@@ -69,7 +71,7 @@ const ShippingMethod = () => {
 
                 <div className="border-l border-gray-4 pl-4">
                   <p className="font-semibold text-dark">$10.99</p>
-                  <p className="text-custom-xs">Standard Shipping</p>
+                  <p className="text-custom-xs">{t("checkout.standardShipping")}</p>
                 </div>
               </div>
             </div>
@@ -109,7 +111,7 @@ const ShippingMethod = () => {
 
                 <div className="border-l border-gray-4 pl-4">
                   <p className="font-semibold text-dark">$12.50</p>
-                  <p className="text-custom-xs">Standard Shipping</p>
+                  <p className="text-custom-xs">{t("checkout.standardShipping")}</p>
                 </div>
               </div>
             </div>

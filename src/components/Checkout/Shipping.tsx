@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 import { ShippingDetails } from "@/types/order";
 
 interface ShippingProps {
@@ -15,6 +16,8 @@ const Shipping: React.FC<ShippingProps> = ({
   useDifferentAddress,
   onToggle,
 }) => {
+  const t = useTranslations();
+
   const handleChange = (field: keyof ShippingDetails, value: string) => {
     if (!shippingDetails) {
       onChange({
@@ -56,7 +59,7 @@ const Shipping: React.FC<ShippingProps> = ({
         onClick={handleToggle}
         className="cursor-pointer flex items-center gap-2.5 font-medium text-lg text-dark py-5 px-5.5"
       >
-        Ship to a different address?
+        {t("checkout.shippingAddress")}?
         <svg
           className={`fill-current ease-out duration-200 ${
             useDifferentAddress && "rotate-180"
@@ -81,14 +84,14 @@ const Shipping: React.FC<ShippingProps> = ({
           <div className="flex flex-col lg:flex-row gap-5 sm:gap-8 mb-5">
             <div className="w-full">
               <label htmlFor="shipping-firstName" className="block mb-2.5">
-                First Name <span className="text-red">*</span>
+                {t("checkout.firstName")} <span className="text-red">*</span>
               </label>
               <input
                 type="text"
                 id="shipping-firstName"
                 value={shippingDetails.firstName}
                 onChange={(e) => handleChange('firstName', e.target.value)}
-                placeholder="John"
+                placeholder={t("checkout.firstNamePlaceholder")}
                 required
                 className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
               />
@@ -96,14 +99,14 @@ const Shipping: React.FC<ShippingProps> = ({
 
             <div className="w-full">
               <label htmlFor="shipping-lastName" className="block mb-2.5">
-                Last Name <span className="text-red">*</span>
+                {t("checkout.lastName")} <span className="text-red">*</span>
               </label>
               <input
                 type="text"
                 id="shipping-lastName"
                 value={shippingDetails.lastName}
                 onChange={(e) => handleChange('lastName', e.target.value)}
-                placeholder="Doe"
+                placeholder={t("checkout.lastNamePlaceholder")}
                 required
                 className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
               />
@@ -125,14 +128,14 @@ const Shipping: React.FC<ShippingProps> = ({
 
           <div className="mb-5">
             <label htmlFor="shipping-country" className="block mb-2.5">
-              Country/ Region <span className="text-red">*</span>
+              {t("checkout.country")} <span className="text-red">*</span>
             </label>
             <input
               type="text"
               id="shipping-country"
               value={shippingDetails.country}
               onChange={(e) => handleChange('country', e.target.value)}
-              placeholder="Enter country"
+              placeholder={t("checkout.countryPlaceholder")}
               required
               className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
             />
@@ -140,14 +143,14 @@ const Shipping: React.FC<ShippingProps> = ({
 
           <div className="mb-5">
             <label htmlFor="shipping-streetAddress" className="block mb-2.5">
-              Street Address <span className="text-red">*</span>
+              {t("checkout.address")} <span className="text-red">*</span>
             </label>
             <input
               type="text"
               id="shipping-streetAddress"
               value={shippingDetails.streetAddress}
               onChange={(e) => handleChange('streetAddress', e.target.value)}
-              placeholder="House number and street name"
+              placeholder={t("checkout.addressPlaceholder")}
               required
               className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
             />
@@ -158,7 +161,7 @@ const Shipping: React.FC<ShippingProps> = ({
                 id="shipping-apartment"
                 value={shippingDetails.apartment || ''}
                 onChange={(e) => handleChange('apartment', e.target.value)}
-                placeholder="Apartment, suite, unit, etc. (optional)"
+                placeholder={t("checkout.addressOptionalPlaceholder")}
                 className="rounded-md border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-2.5 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
               />
             </div>
@@ -166,7 +169,7 @@ const Shipping: React.FC<ShippingProps> = ({
 
           <div className="mb-5">
             <label htmlFor="shipping-city" className="block mb-2.5">
-              Town/ City <span className="text-red">*</span>
+              {t("checkout.city")} <span className="text-red">*</span>
             </label>
             <input
               type="text"

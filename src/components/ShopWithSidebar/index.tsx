@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import Breadcrumb from "../Common/Breadcrumb";
 import CustomSelect from "./CustomSelect";
 import CategoryDropdown from "./CategoryDropdown";
@@ -23,6 +24,7 @@ interface Category {
 }
 
 const ShopWithSidebar = () => {
+  const t = useTranslations();
   const searchParams = useSearchParams();
   const [productStyle, setProductStyle] = useState("grid");
   const [productSidebar, setProductSidebar] = useState(false);
@@ -98,9 +100,9 @@ const ShopWithSidebar = () => {
   };
 
   const options = [
-    { label: "Latest Products", value: "0" },
-    { label: "Best Selling", value: "1" },
-    { label: "Old Products", value: "2" },
+    { label: t("product.latestProducts"), value: "0" },
+    { label: t("product.bestSellers"), value: "1" },
+    { label: t("product.oldProducts"), value: "2" },
   ];
 
   const genders = [
@@ -493,14 +495,14 @@ const ShopWithSidebar = () => {
               id: 'all-accessories',
               name: 'All',
               count: 0,
-              type: 'accessories',
+              type: 'accessories' as const,
               subcategories: []
             },
             ...accessoryCategories.map(mainCat => ({
               id: mainCat.id,
               name: mainCat.name,
               count: 0,
-              type: 'accessories',
+              type: 'accessories' as const,
               subcategories: [
                 {
                   id: `all-accessory-${mainCat.id}`,
@@ -528,14 +530,14 @@ const ShopWithSidebar = () => {
               id: 'all-services',
               name: 'All',
               count: 0,
-              type: 'services',
+              type: 'services' as const,
               subcategories: []
             },
             ...serviceCategories.map(mainCat => ({
               id: mainCat.id,
               name: mainCat.name,
               count: 0,
-              type: 'services',
+              type: 'services' as const,
               subcategories: [
                 {
                   id: `all-service-${mainCat.id}`,
@@ -563,14 +565,14 @@ const ShopWithSidebar = () => {
               id: 'all-spare-parts',
               name: 'All',
               count: 0,
-              type: 'spare-parts',
+              type: 'spare-parts' as const,
               subcategories: []
             },
             ...sparePartCategories.map(mainCat => ({
               id: mainCat.id,
               name: mainCat.name,
               count: 0,
-              type: 'spare-parts',
+              type: 'spare-parts' as const,
               subcategories: [
                 {
                   id: `all-sparepart-${mainCat.id}`,
@@ -682,8 +684,8 @@ const ShopWithSidebar = () => {
                   {/* <!-- filter box --> */}
                   <div className="bg-white shadow-1 rounded-lg py-4 px-5">
                     <div className="flex items-center justify-between">
-                      <p>Filters:</p>
-                      <button className="text-blue" onClick={handleClearAllFilters}>Clean All</button>
+                      <p>{t("common.filters")}:</p>
+                      <button className="text-blue" onClick={handleClearAllFilters}>{t("common.cleanAll")}</button>
                     </div>
                   </div>
 
@@ -737,7 +739,7 @@ const ShopWithSidebar = () => {
 
                     <p>
                       Showing <span className="text-dark">{startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length}</span>{" "}
-                      Products
+                      {t("common.products")}
                     </p>
                   </div>
 
@@ -842,8 +844,8 @@ const ShopWithSidebar = () => {
                       d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
                     />
                   </svg>
-                  <h3 className="text-xl font-medium text-dark mb-2">Ürün Bulunamadı</h3>
-                  <p className="text-gray-4 text-center">Seçtiğiniz filtrelere uygun ürün bulunmamaktadır.</p>
+                  <h3 className="text-xl font-medium text-dark mb-2">{t("product.noProductsFound")}</h3>
+                  <p className="text-gray-4 text-center">{t("product.noProductsFoundDesc")}</p>
                 </div>
               ) : (
                 <div

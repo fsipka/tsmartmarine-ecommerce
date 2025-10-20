@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { productsService, Product } from "@/lib/api/services/products.service";
 import { formatPrice } from "@/lib/utils/format";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 // Import Swiper styles
 import "swiper/css/pagination";
@@ -15,6 +16,8 @@ import Image from "next/image";
 const CONTENT_BASE_URL = 'https://marineapi.tsmart.ai/contents/';
 
 const HeroCarousal = () => {
+  const t = useTranslations("home");
+  const tCommon = useTranslations("common");
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -85,7 +88,7 @@ const HeroCarousal = () => {
     return (
       <div className="flex items-center justify-center h-[400px]">
         <div className="text-center">
-          <p className="text-dark">Loading products...</p>
+          <p className="text-dark">{t("loadingProducts")}</p>
         </div>
       </div>
     );
@@ -95,7 +98,7 @@ const HeroCarousal = () => {
     return (
       <div className="flex items-center justify-center h-[400px]">
         <div className="text-center">
-          <p className="text-dark">No products available</p>
+          <p className="text-dark">{tCommon("noProductsAvailable")}</p>
         </div>
       </div>
     );
@@ -128,9 +131,9 @@ const HeroCarousal = () => {
                     {discount}%
                   </span>
                   <span className="block text-dark text-sm sm:text-custom-1 sm:leading-[24px]">
-                    Sale
+                    {t("sale")}
                     <br />
-                    Off
+                    {t("off")}
                   </span>
                 </div>
 
@@ -141,14 +144,14 @@ const HeroCarousal = () => {
                 </h1>
 
                 <p className="line-clamp-2">
-                  {product.description || "Premium quality product available now"}
+                  {product.description || t("premiumQualityProduct")}
                 </p>
 
                 <Link
                   href={`/shop-details?id=${product.id}&type=${product.type}`}
                   className="inline-flex font-medium text-white text-custom-sm rounded-md bg-dark py-3 px-9 ease-out duration-200 hover:bg-blue mt-10"
                 >
-                  Shop Now - ${formatPrice(product.price)}
+                  {t("shopNow")} - ${formatPrice(product.price)}
                 </Link>
               </div>
 

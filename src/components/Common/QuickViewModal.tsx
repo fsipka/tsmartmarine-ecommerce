@@ -10,8 +10,11 @@ import { usePreviewSlider } from "@/app/context/PreviewSliderContext";
 import { resetQuickView } from "@/redux/features/quickView-slice";
 import { updateproductDetails } from "@/redux/features/product-details";
 import { formatPrice } from "@/lib/utils/format";
+import { useTranslations } from "next-intl";
 
 const QuickViewModal = () => {
+  const t = useTranslations("product");
+  const tCommon = useTranslations("common");
   const { isModalOpen, closeModal } = useModalContext();
   const { openPreviewModal } = usePreviewSlider();
   const [quantity, setQuantity] = useState(1);
@@ -158,7 +161,7 @@ const QuickViewModal = () => {
 
             <div className="max-w-[445px] w-full">
               <span className="inline-block text-custom-xs font-medium text-white py-1 px-3 bg-green mb-6.5">
-                SALE 20% OFF
+                {t("saleOff")}
               </span>
 
               <h3 className="font-semibold text-xl xl:text-heading-5 text-dark mb-4">
@@ -276,8 +279,8 @@ const QuickViewModal = () => {
                   </div>
 
                   <span>
-                    <span className="font-medium text-dark"> 4.7 Rating </span>
-                    <span className="text-dark-2"> (5 reviews) </span>
+                    <span className="font-medium text-dark"> {t("rating40")} </span>
+                    <span className="text-dark-2"> {t("reviews5")} </span>
                   </span>
                 </div>
 
@@ -306,7 +309,7 @@ const QuickViewModal = () => {
                     </defs>
                   </svg>
 
-                  <span className="font-medium text-dark"> In Stock </span>
+                  <span className="font-medium text-dark"> {t("inStock")} </span>
                 </div>
               </div>
 
@@ -319,7 +322,7 @@ const QuickViewModal = () => {
               <div className="flex flex-wrap justify-between gap-5 mt-6 mb-7.5">
                 <div>
                   <h4 className="font-semibold text-lg text-dark mb-3.5">
-                    Price
+                    {t("price")}
                   </h4>
 
                   <span className="flex items-center gap-2">
@@ -334,7 +337,7 @@ const QuickViewModal = () => {
 
                 <div>
                   <h4 className="font-semibold text-lg text-dark mb-3.5">
-                    Quantity
+                    {t("quantity")}
                   </h4>
 
                   <div className="flex items-center gap-3">
@@ -406,7 +409,7 @@ const QuickViewModal = () => {
                   className={`inline-flex font-medium text-white bg-blue py-3 px-7 rounded-md ease-out duration-200 hover:bg-blue-dark
                   `}
                 >
-                  Add to Cart
+                  {tCommon("addToCart")}
                 </button>
 
                 <button
@@ -427,7 +430,7 @@ const QuickViewModal = () => {
                       fill=""
                     />
                   </svg>
-                  Add to Wishlist
+                  {t("addToWishlist")}
                 </button>
               </div>
             </div>

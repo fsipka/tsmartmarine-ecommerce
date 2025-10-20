@@ -1,8 +1,10 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const Footer = () => {
+  const t = useTranslations();
   const year = new Date().getFullYear();
 
   return (
@@ -12,7 +14,7 @@ const Footer = () => {
         <div className="flex flex-wrap xl:flex-nowrap gap-10 xl:gap-19 xl:justify-between pt-17.5 xl:pt-22.5 pb-10 xl:pb-15">
           <div className="max-w-[380px] w-full">
             <h2 className="mb-7.5 text-custom-1 font-medium text-dark">
-              Help & Support
+              {t("footer.customerService")}
             </h2>
 
             <ul className="flex flex-col gap-3">
@@ -33,7 +35,7 @@ const Footer = () => {
                     />
                   </svg>
                   <div>
-                    <div className="font-medium mb-1">Email</div>
+                    <div className="font-medium mb-1">{t("contact.email")}</div>
                     <div className="text-sm">usa@tsmart.ai</div>
                   </div>
                 </a>
@@ -198,33 +200,33 @@ const Footer = () => {
 
           <div className="w-full sm:w-auto">
             <h2 className="mb-7.5 text-custom-1 font-medium text-dark">
-              Account
+              {t("common.account")}
             </h2>
 
             <ul className="flex flex-col gap-3.5">
               <li>
                 <Link className="ease-out duration-200 hover:text-blue" href="/my-account">
-                  My Account
+                  {t("nav.myAccount")}
                 </Link>
               </li>
               <li>
                 <Link className="ease-out duration-200 hover:text-blue" href="/signin">
-                  Login / Register
+                  {t("auth.signIn")} / {t("auth.signUp")}
                 </Link>
               </li>
               <li>
                 <Link className="ease-out duration-200 hover:text-blue" href="/cart">
-                  Cart
+                  {t("common.cart")}
                 </Link>
               </li>
               <li>
                 <Link className="ease-out duration-200 hover:text-blue" href="/wishlist">
-                  Wishlist
+                  {t("common.wishlist")}
                 </Link>
               </li>
               <li>
                 <Link className="ease-out duration-200 hover:text-blue" href="/shop">
-                  Shop
+                  {t("common.shop")}
                 </Link>
               </li>
             </ul>
@@ -232,33 +234,33 @@ const Footer = () => {
 
           <div className="w-full sm:w-auto">
             <h2 className="mb-7.5 text-custom-1 font-medium text-dark">
-              Quick Link
+              {t("footer.quickLinks")}
             </h2>
 
             <ul className="flex flex-col gap-3">
               <li>
                 <Link className="ease-out duration-200 hover:text-blue" href="/privacy-policy">
-                  Privacy Policy
+                  {t("common.privacyPolicy")}
                 </Link>
               </li>
               <li>
                 <Link className="ease-out duration-200 hover:text-blue" href="/refund-policy">
-                  Refund Policy
+                  {t("common.refundPolicy")}
                 </Link>
               </li>
               <li>
                 <Link className="ease-out duration-200 hover:text-blue" href="/terms-of-use">
-                  Terms of Use
+                  {t("common.termsOfUse")}
                 </Link>
               </li>
               <li>
                 <Link className="ease-out duration-200 hover:text-blue" href="/faq">
-                  FAQ&apos;s
+                  {t("common.faq")}
                 </Link>
               </li>
               <li>
                 <Link className="ease-out duration-200 hover:text-blue" href="/contact">
-                  Contact
+                  {t("common.contact")}
                 </Link>
               </li>
             </ul>
@@ -266,11 +268,11 @@ const Footer = () => {
 
           <div className="w-full sm:w-auto">
             <h2 className="mb-7.5 text-custom-1 font-medium text-dark lg:text-right">
-              Download App
+              {t("footer.downloadApp") || "Download App"}
             </h2>
 
             <p className="lg:text-right text-custom-sm mb-4">
-              Save $3 With App & New User only
+              {t("footer.downloadAppDesc") || "Save $3 With App & New User only"}
             </p>
 
             <ul className="flex flex-col lg:items-end gap-3">
@@ -295,9 +297,9 @@ const Footer = () => {
 
                   <div>
                     <span className="block text-custom-xs">
-                      Download on the
+                      {t("footer.downloadOn") || "Download on the"}
                     </span>
-                    <p className="font-medium">App Store</p>
+                    <p className="font-medium">{t("footer.appStore") || "App Store"}</p>
                   </div>
                 </a>
               </li>
@@ -322,8 +324,8 @@ const Footer = () => {
                   </svg>
 
                   <div>
-                    <span className="block text-custom-xs"> Get in On </span>
-                    <p className="font-medium">Google Play</p>
+                    <span className="block text-custom-xs">{t("footer.getItOn") || "Get in On"}</span>
+                    <p className="font-medium">{t("footer.googlePlay") || "Google Play"}</p>
                   </div>
                 </a>
               </li>
@@ -338,11 +340,11 @@ const Footer = () => {
         <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
           <div className="flex gap-5 flex-wrap items-center justify-between">
             <p className="text-dark font-medium">
-              &copy; {year}. All rights reserved by TSmart.
+              &copy; {year}. {t("footer.allRightsReserved")} TSmart.
             </p>
 
             <div className="flex flex-wrap items-center gap-4">
-              <p className="font-medium">We Accept:</p>
+              <p className="font-medium">{t("footer.weAccept") || "We Accept"}:</p>
 
               <div className="flex flex-wrap items-center gap-6">
                 <a href="#" aria-label="payment system with visa card">
@@ -384,7 +386,7 @@ const Footer = () => {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  <span className="text-sm font-medium">Bank Transfer</span>
+                  <span className="text-sm font-medium">{t("checkout.bankTransfer")}</span>
                 </a>
               </div>
             </div>

@@ -1,11 +1,13 @@
 import React from "react";
 import { Order } from "@/lib/api/services/order.service";
+import { useTranslations } from "next-intl";
 
 interface OrderDetailsProps {
   order: Order;
 }
 
 const OrderDetails = ({ order }: OrderDetailsProps) => {
+  const t = useTranslations();
   // Format date
   const orderDate = order.createdDate
     ? new Date(order.createdDate).toLocaleDateString('tr-TR')
@@ -15,15 +17,15 @@ const OrderDetails = ({ order }: OrderDetailsProps) => {
   const getStatusDisplay = (status: number) => {
     switch (status) {
       case 0:
-        return 'Pending';
+        return t("account.processing");
       case 1:
-        return 'Processing';
+        return t("account.processing");
       case 2:
-        return 'Delivered';
+        return t("account.delivered");
       case 3:
-        return 'On-Hold';
+        return t("account.onHold");
       default:
-        return 'Unknown';
+        return t("account.processing");
     }
   };
 
@@ -50,22 +52,22 @@ const OrderDetails = ({ order }: OrderDetailsProps) => {
     <>
       <div className="items-center justify-between py-4.5 px-7.5 hidden md:flex ">
         <div className="min-w-[113px]">
-          <p className="text-custom-sm text-dark">Order</p>
+          <p className="text-custom-sm text-dark">{t("common.orders")}</p>
         </div>
         <div className="min-w-[113px]">
-          <p className="text-custom-sm text-dark">Date</p>
-        </div>
-
-        <div className="min-w-[113px]">
-          <p className="text-custom-sm text-dark">Status</p>
+          <p className="text-custom-sm text-dark">{t("account.date")}</p>
         </div>
 
         <div className="min-w-[113px]">
-          <p className="text-custom-sm text-dark">Items</p>
+          <p className="text-custom-sm text-dark">{t("account.status")}</p>
         </div>
 
         <div className="min-w-[113px]">
-          <p className="text-custom-sm text-dark">Total</p>
+          <p className="text-custom-sm text-dark">{t("account.items")}</p>
+        </div>
+
+        <div className="min-w-[113px]">
+          <p className="text-custom-sm text-dark">{t("account.total")}</p>
         </div>
       </div>
 
@@ -91,7 +93,7 @@ const OrderDetails = ({ order }: OrderDetailsProps) => {
 
         <div className="min-w-[113px]">
           <p className="text-custom-sm text-dark">
-            {order.orderItemCount} items
+            {order.orderItemCount} {t("account.items")}
           </p>
         </div>
 
@@ -104,26 +106,26 @@ const OrderDetails = ({ order }: OrderDetailsProps) => {
 
       <div className="px-7.5 py-4 w-full border-t border-gray-3">
         <div className="mb-4">
-          <p className="font-bold text-dark mb-1">Description:</p>
-          <p className="text-custom-sm text-dark">{order.description || 'No description'}</p>
+          <p className="font-bold text-dark mb-1">{t("product.description")}:</p>
+          <p className="text-custom-sm text-dark">{order.description || t("account.noItems")}</p>
         </div>
 
         {order.shippingAddress && (
           <div className="mb-4">
-            <p className="font-bold text-dark mb-1">Shipping Address:</p>
+            <p className="font-bold text-dark mb-1">{t("account.shippingAddress")}:</p>
             <p className="text-custom-sm text-dark">{order.shippingAddress}</p>
           </div>
         )}
 
         {order.billingAddress && (
           <div className="mb-4">
-            <p className="font-bold text-dark mb-1">Billing Address:</p>
+            <p className="font-bold text-dark mb-1">{t("account.billingAddress")}:</p>
             <p className="text-custom-sm text-dark">{order.billingAddress}</p>
           </div>
         )}
 
         <div className="mb-4">
-          <p className="font-bold text-dark mb-2">Order Items:</p>
+          <p className="font-bold text-dark mb-2">{t("account.items")}:</p>
           <div className="space-y-2">
             {order.orderItems && order.orderItems.length > 0 ? (
               order.orderItems.map((item) => {
@@ -147,20 +149,20 @@ const OrderDetails = ({ order }: OrderDetailsProps) => {
                 );
               })
             ) : (
-              <p className="text-custom-sm text-gray-5">No items</p>
+              <p className="text-custom-sm text-gray-5">{t("account.noItems")}</p>
             )}
           </div>
         </div>
 
         {order.discountAmount > 0 && (
           <div className="flex justify-between py-2 border-t border-gray-3">
-            <p className="text-custom-sm text-dark font-medium">Discount:</p>
+            <p className="text-custom-sm text-dark font-medium">{t("product.discount")}:</p>
             <p className="text-custom-sm text-red">-${order.discountAmount.toFixed(2)}</p>
           </div>
         )}
 
         <div className="flex justify-between py-2 border-t border-gray-3">
-          <p className="text-sm text-dark font-bold">Total Amount:</p>
+          <p className="text-sm text-dark font-bold">{t("account.total")}:</p>
           <p className="text-sm text-dark font-bold">{formattedTotal}</p>
         </div>
       </div>

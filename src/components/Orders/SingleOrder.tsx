@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import OrderActions from "./OrderActions";
 import OrderModal from "./OrderModal";
 import { Order } from "@/lib/api/services/order.service";
+import { useTranslations } from "next-intl";
 
 interface SingleOrderProps {
   orderItem: Order;
@@ -9,6 +10,7 @@ interface SingleOrderProps {
 }
 
 const SingleOrder = ({ orderItem, smallView }: SingleOrderProps) => {
+  const t = useTranslations();
   const [showDetails, setShowDetails] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
 
@@ -37,15 +39,15 @@ const SingleOrder = ({ orderItem, smallView }: SingleOrderProps) => {
   const getStatusDisplay = (status: number) => {
     switch (status) {
       case 0:
-        return 'Pending';
+        return t("account.processing");
       case 1:
-        return 'Processing';
+        return t("account.processing");
       case 2:
-        return 'Delivered';
+        return t("account.delivered");
       case 3:
-        return 'On-Hold';
+        return t("account.onHold");
       default:
-        return 'Unknown';
+        return t("account.processing");
     }
   };
 
@@ -67,8 +69,8 @@ const SingleOrder = ({ orderItem, smallView }: SingleOrderProps) => {
 
   // Get payment status display
   const getPaymentStatusDisplay = (paymentStatus: string | null) => {
-    if (!paymentStatus) return 'Unpaid';
-    return paymentStatus === 'Paid' ? 'Paid' : 'Unpaid';
+    if (!paymentStatus) return t("account.payment");
+    return paymentStatus === 'Paid' ? t("account.payment") : t("account.payment");
   };
 
   // Get payment status color classes
@@ -119,7 +121,7 @@ const SingleOrder = ({ orderItem, smallView }: SingleOrderProps) => {
           </div>
 
           <div className="min-w-[100px]">
-            <p className="text-custom-sm text-dark">{itemCount} items</p>
+            <p className="text-custom-sm text-dark">{itemCount} {t("account.items")}</p>
           </div>
 
           <div className="min-w-[113px]">
@@ -140,18 +142,18 @@ const SingleOrder = ({ orderItem, smallView }: SingleOrderProps) => {
           <div className="py-4.5 px-7.5 border-b border-gray-3">
             <div className="mb-2">
               <p className="text-custom-sm text-dark">
-                <span className="font-bold pr-2">Order:</span> {orderNumber}
+                <span className="font-bold pr-2">{t("common.orders")}:</span> {orderNumber}
               </p>
             </div>
             <div className="mb-2">
               <p className="text-custom-sm text-dark">
-                <span className="font-bold pr-2">Date:</span> {orderDate}
+                <span className="font-bold pr-2">{t("account.date")}:</span> {orderDate}
               </p>
             </div>
 
             <div className="mb-2">
               <p className="text-custom-sm text-dark">
-                <span className="font-bold pr-2">Status:</span>{" "}
+                <span className="font-bold pr-2">{t("account.status")}:</span>{" "}
                 <span
                   className={`inline-block text-custom-sm py-0.5 px-2.5 rounded-[30px] ${getStatusClass(orderItem.orderStatus)}`}
                 >
@@ -162,7 +164,7 @@ const SingleOrder = ({ orderItem, smallView }: SingleOrderProps) => {
 
             <div className="mb-2">
               <p className="text-custom-sm text-dark">
-                <span className="font-bold pr-2">Payment:</span>{" "}
+                <span className="font-bold pr-2">{t("account.payment")}:</span>{" "}
                 <span
                   className={`inline-block text-custom-sm py-0.5 px-2.5 rounded-[30px] ${getPaymentStatusClass(orderItem.paymentStatus)}`}
                 >
@@ -173,19 +175,19 @@ const SingleOrder = ({ orderItem, smallView }: SingleOrderProps) => {
 
             <div className="mb-2">
               <p className="text-custom-sm text-dark">
-                <span className="font-bold pr-2">Items:</span> {itemCount} items
+                <span className="font-bold pr-2">{t("account.items")}:</span> {itemCount} {t("account.items")}
               </p>
             </div>
 
             <div className="mb-2">
               <p className="text-custom-sm text-dark">
-                <span className="font-bold pr-2">Total:</span> <span className="font-medium">{formattedTotal}</span>
+                <span className="font-bold pr-2">{t("account.total")}:</span> <span className="font-medium">{formattedTotal}</span>
               </p>
             </div>
 
             <div className="">
               <p className="text-custom-sm text-dark flex items-center">
-                <span className="font-bold pr-2">Actions:</span>{" "}
+                <span className="font-bold pr-2">{t("common.action")}:</span>{" "}
                 <OrderActions
                   toggleDetails={toggleDetails}
                   toggleEdit={toggleEdit}

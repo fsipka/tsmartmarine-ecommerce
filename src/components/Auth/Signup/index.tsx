@@ -1,8 +1,10 @@
 import Breadcrumb from "@/components/Common/Breadcrumb";
 import Link from "next/link";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 const Signup = () => {
+  const t = useTranslations();
   return (
     <>
       <Breadcrumb title={"Signup"} pages={["Signup"]} />
@@ -13,7 +15,7 @@ const Signup = () => {
               <h2 className="font-semibold text-xl sm:text-2xl xl:text-heading-5 text-dark mb-1.5">
                 Create an Account
               </h2>
-              <p>Enter your detail below</p>
+              <p>{t("auth.enterDetailBelow")}</p>
             </div>
 
             <div className="flex flex-col gap-4.5">
@@ -83,7 +85,7 @@ const Signup = () => {
 
             <span className="relative z-1 block font-medium text-center mt-4.5">
               <span className="block absolute -z-1 left-0 top-1/2 h-px w-full bg-gray-3"></span>
-              <span className="inline-block px-3 bg-white">Or</span>
+              <span className="inline-block px-3 bg-white">{t("common.or")}</span>
             </span>
 
             <div className="mt-5.5">
@@ -97,7 +99,7 @@ const Signup = () => {
                     type="text"
                     name="name"
                     id="name"
-                    placeholder="Enter your full name"
+                    placeholder={t("auth.fullNamePlaceholder")}
                     className="rounded-lg border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-3 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                   />
                 </div>
@@ -111,7 +113,7 @@ const Signup = () => {
                     type="email"
                     name="email"
                     id="email"
-                    placeholder="Enter your email address"
+                    placeholder={t("auth.emailPlaceholder")}
                     className="rounded-lg border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-3 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                   />
                 </div>
@@ -125,7 +127,7 @@ const Signup = () => {
                     type="password"
                     name="password"
                     id="password"
-                    placeholder="Enter your password"
+                    placeholder={t("auth.passwordPlaceholder")}
                     autoComplete="on"
                     className="rounded-lg border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-3 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                   />
@@ -140,7 +142,7 @@ const Signup = () => {
                     type="password"
                     name="re-type-password"
                     id="re-type-password"
-                    placeholder="Re-type your password"
+                    placeholder={t("auth.retypePasswordPlaceholder")}
                     autoComplete="on"
                     className="rounded-lg border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-3 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                   />

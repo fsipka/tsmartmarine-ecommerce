@@ -17,8 +17,6 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          console.log('🔑 NextAuth authorize - Starting authentication...');
-
           // Call your .NET API
           const response = await authService.login({
             email: credentials.email,
@@ -52,7 +50,6 @@ export const authOptions: NextAuthOptions = {
             return user;
           }
 
-          console.log('❌ NextAuth authorize - No user or token in response');
           return null;
         } catch (error: any) {
           console.error('❌ NextAuth authorize - Auth error:', {

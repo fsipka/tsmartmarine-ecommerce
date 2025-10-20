@@ -10,10 +10,10 @@ import { updateproductDetails } from "@/redux/features/product-details";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import Link from "next/link";
-import { useProductImage } from "@/hooks/useProductImage";
-import { getSession } from "@/lib/auth/session";
+import { useTranslations } from "next-intl";
 
 const ProductItem = ({ item }: { item: Product }) => {
+  const t = useTranslations("common");
   const { openModal } = useModalContext();
 
   const dispatch = useDispatch<AppDispatch>();
@@ -47,34 +47,49 @@ const ProductItem = ({ item }: { item: Product }) => {
     dispatch(updateproductDetails({ ...item }));
   };
 
-  // Get the image URL with fallback to company logo
+  // Get the image URL with fallback
   const getImageUrl = () => {
     // If product has preview images, use the first one
     if (item.imgs?.previews && item.imgs.previews.length > 0 && item.imgs.previews[0]) {
       return item.imgs.previews[0];
     }
 
-    // Otherwise, try to get company logo from session
-    const session = getSession();
-    if (session?.user?.companyLogoUrl) {
-      return session.user.companyLogoUrl;
-    }
-
-    // Final fallback to default image
-    return '/images/products/product-01.png';
+    // Return null to show placeholder icon
+    return null;
   };
+
+  const imageUrl = getImageUrl();
 
   return (
     <div className="group">
       <div className="relative overflow-hidden flex items-center justify-center rounded-lg bg-[#F6F7FB] min-h-[270px] mb-4">
-        <Image
-          src={getImageUrl()}
-          alt={item.title || 'Product'}
-          width={250}
-          height={250}
-          className="object-contain"
-          unoptimized={getImageUrl().startsWith('http')}
-        />
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={item.title || 'Product'}
+            width={250}
+            height={250}
+            className="object-contain"
+            unoptimized={imageUrl.startsWith('http')}
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center text-gray-4">
+            <svg
+              className="w-20 h-20 mb-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+            <p className="text-sm">{t("noImage") || "No Image"}</p>
+          </div>
+        )}
 
         <div className="absolute left-0 bottom-0 translate-y-full w-full flex items-center justify-center gap-2.5 pb-5 ease-linear duration-200 group-hover:translate-y-0">
           <button
@@ -113,7 +128,7 @@ const ProductItem = ({ item }: { item: Product }) => {
             onClick={() => handleAddToCart()}
             className="inline-flex font-medium text-custom-sm py-[7px] px-5 rounded-[5px] bg-blue text-white ease-out duration-200 hover:bg-blue-dark"
           >
-            Add to cart
+            {t("addToCart")}
           </button>
 
           <button

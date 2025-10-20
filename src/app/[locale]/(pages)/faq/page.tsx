@@ -3,61 +3,23 @@ import { useState } from "react";
 import { Metadata } from "next";
 import Breadcrumb from "@/components/Common/Breadcrumb";
 import Link from "next/link";
-
-const faqData = [
-  {
-    id: 1,
-    question: "What types of marine products do you offer?",
-    answer: "We offer a comprehensive range of marine products including luxury yachts, yacht accessories, spare parts, and professional marine services. Our inventory covers everything from navigation equipment to maintenance supplies.",
-  },
-  {
-    id: 2,
-    question: "How long does shipping take?",
-    answer: "Shipping times vary depending on your location and the product ordered. Standard shipping typically takes 5-7 business days, while express shipping is available for 2-3 business day delivery. Large items like yachts require special handling and shipping arrangements.",
-  },
-  {
-    id: 3,
-    question: "Do you ship internationally?",
-    answer: "Yes, we ship to most countries worldwide. International shipping times and costs vary by destination. Custom duties and import taxes may apply and are the responsibility of the customer.",
-  },
-  {
-    id: 4,
-    question: "What payment methods do you accept?",
-    answer: "We accept all major credit cards (Visa, Mastercard, American Express), PayPal, Apple Pay, and Google Pay. For large purchases such as yachts, we can arrange bank transfers and financing options.",
-  },
-  {
-    id: 5,
-    question: "How do I track my order?",
-    answer: "Once your order ships, you will receive a tracking number via email. You can use this number to track your shipment on our website or the carrier's website. You can also check your order status by logging into your account.",
-  },
-  {
-    id: 6,
-    question: "What is your return policy?",
-    answer: "We offer a 30-day return policy for most products. Items must be unused, in original condition, and in original packaging. Some items like custom orders and marine services are non-returnable. Please see our Refund Policy page for complete details.",
-  },
-  {
-    id: 7,
-    question: "Do you offer warranties on your products?",
-    answer: "Yes, most of our products come with manufacturer warranties. Warranty periods vary by product and manufacturer. We also offer extended warranty options on select items. Please contact us for specific warranty information.",
-  },
-  {
-    id: 8,
-    question: "Can I cancel or modify my order?",
-    answer: "Orders can be cancelled or modified within 24 hours of placement, provided they haven't been shipped yet. Please contact our customer service team as soon as possible if you need to make changes to your order.",
-  },
-  {
-    id: 9,
-    question: "Do you offer installation services?",
-    answer: "Yes, we offer professional installation services for many of our products. Service availability depends on your location and the specific product. Please contact us to discuss installation options and pricing.",
-  },
-  {
-    id: 10,
-    question: "How can I contact customer support?",
-    answer: "You can reach our customer support team via email at support@example.com, by phone at (+099) 532-786-9843, or through our contact form. Our support hours are Monday-Friday, 9AM-6PM EST.",
-  },
-];
+import { useTranslations } from "next-intl";
 
 export default function FAQPage() {
+  const t = useTranslations("faq");
+
+  const faqData = [
+    { id: 1, question: t("q1"), answer: t("a1") },
+    { id: 2, question: t("q2"), answer: t("a2") },
+    { id: 3, question: t("q3"), answer: t("a3") },
+    { id: 4, question: t("q4"), answer: t("a4") },
+    { id: 5, question: t("q5"), answer: t("a5") },
+    { id: 6, question: t("q6"), answer: t("a6") },
+    { id: 7, question: t("q7"), answer: t("a7") },
+    { id: 8, question: t("q8"), answer: t("a8") },
+    { id: 9, question: t("q9"), answer: t("a9") },
+    { id: 10, question: t("q10"), answer: t("a10") },
+  ];
   const [openId, setOpenId] = useState<number | null>(null);
 
   const toggleFAQ = (id: number) => {
@@ -66,14 +28,14 @@ export default function FAQPage() {
 
   return (
     <>
-      <Breadcrumb title="Frequently Asked Questions" pages={["faq"]} />
+      <Breadcrumb title={t("title")} pages={["faq"]} />
       <section className="overflow-hidden pb-17.5 pt-15">
         <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
           <div className="max-w-[900px] mx-auto">
             <div className="text-center mb-12">
-              <h1 className="text-3xl font-bold text-dark mb-4">Frequently Asked Questions</h1>
+              <h1 className="text-3xl font-bold text-dark mb-4">{t("title")}</h1>
               <p className="text-body">
-                Find answers to common questions about our products, shipping, returns, and more.
+                {t("subtitle")}
               </p>
             </div>
 
@@ -117,16 +79,16 @@ export default function FAQPage() {
 
             <div className="mt-12 text-center p-8 bg-blue-light rounded-lg">
               <h3 className="text-xl font-semibold text-dark mb-3">
-                Still have questions?
+                {t("stillHaveQuestions")}
               </h3>
               <p className="text-body mb-6">
-                Can&apos;t find the answer you&apos;re looking for? Please contact our customer support team.
+                {t("cantFindAnswer")}
               </p>
               <Link
                 href="/contact"
                 className="inline-flex font-medium text-custom-sm text-white bg-blue py-3 px-9.5 rounded-md ease-out duration-200 hover:bg-blue-dark"
               >
-                Contact Us
+                {t("contactUs")}
               </Link>
             </div>
           </div>

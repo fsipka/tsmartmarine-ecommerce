@@ -8,8 +8,10 @@ import { authService } from "@/lib/api/services/auth.service";
 import { useAuth } from "@/contexts/AuthContext";
 import { createUserSessionFromToken } from "@/lib/auth/session";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 const Signin = () => {
+  const t = useTranslations("auth");
   const router = useRouter();
   const { login } = useAuth();
   const [email, setEmail] = useState("");
@@ -33,12 +35,12 @@ const Signin = () => {
       if (userSession) {
         // Session'ı context ve localStorage'a kaydet
         login(userSession);
-        toast.success("Giriş başarılı!");
+        toast.success(t("loginSuccess"));
 
         // Ana sayfaya yönlendir
         router.push('/');
       } else {
-        toast.error("Session oluşturulamadı!");
+        toast.error(t("sessionError"));
       }
     } catch (error: any) {
       // API'den gelen hata formatı: { data: null, errors: ['Bilgiler uyuşmuyor'], statusCode: 401 }
@@ -52,7 +54,7 @@ const Signin = () => {
       } else if (error.message) {
         toast.error(error.message);
       } else {
-        toast.error("Giriş başarısız oldu!");
+        toast.error(t("loginFailed"));
       }
     } finally {
       setLoading(false);
@@ -61,22 +63,22 @@ const Signin = () => {
 
   return (
     <>
-      <Breadcrumb title={"Signin"} pages={["Signin"]} />
+      <Breadcrumb title={t("signIn")} pages={[t("signIn")]} />
       <section className="overflow-hidden py-20 bg-gray-2">
         <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
           <div className="max-w-[570px] w-full mx-auto rounded-xl bg-white shadow-1 p-4 sm:p-7.5 xl:p-11">
             <div className="text-center mb-11">
               <h2 className="font-semibold text-xl sm:text-2xl xl:text-heading-5 text-dark mb-1.5">
-                Sign In to Your Account
+                {t("signInToYourAccount")}
               </h2>
-              <p>Enter your detail below</p>
+              <p>{t("enterYourDetails")}</p>
             </div>
 
             <div>
               <form onSubmit={handleSubmit}>
                 <div className="mb-5">
                   <label htmlFor="email" className="block mb-2.5">
-                    Email
+                    {t("email")}
                   </label>
 
                   <input
@@ -85,7 +87,7 @@ const Signin = () => {
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
+                    placeholder={t("emailPlaceholder")}
                     required
                     className="rounded-lg border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-3 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
                   />
@@ -93,7 +95,7 @@ const Signin = () => {
 
                 <div className="mb-5">
                   <label htmlFor="password" className="block mb-2.5">
-                    Password
+                    {t("password")}
                   </label>
 
                   <input
@@ -102,7 +104,7 @@ const Signin = () => {
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
+                    placeholder={t("passwordPlaceholder")}
                     required
                     autoComplete="on"
                     className="rounded-lg border border-gray-3 bg-gray-1 placeholder:text-dark-5 w-full py-3 px-5 outline-none duration-200 focus:border-transparent focus:shadow-input focus:ring-2 focus:ring-blue/20"
@@ -114,19 +116,19 @@ const Signin = () => {
                   disabled={loading}
                   className="w-full flex justify-center font-medium text-white bg-dark py-3 px-6 rounded-lg ease-out duration-200 hover:bg-blue mt-7.5 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? "Signing in..." : "Sign in to account"}
+                  {loading ? t("signingIn") : t("signInButton")}
                 </button>
 
                 <a
                   href="#"
                   className="block text-center text-dark-4 mt-4.5 ease-out duration-200 hover:text-dark"
                 >
-                  Forget your password?
+                  {t("forgotPassword")}
                 </a>
 
                 <span className="relative z-1 block font-medium text-center mt-4.5">
                   <span className="block absolute -z-1 left-0 top-1/2 h-px w-full bg-gray-3"></span>
-                  <span className="inline-block px-3 bg-white">Or</span>
+                  <span className="inline-block px-3 bg-white">{t("or")}</span>
                 </span>
 
                 <div className="flex flex-col gap-4.5 mt-4.5">
@@ -174,7 +176,7 @@ const Signin = () => {
                         </clipPath>
                       </defs>
                     </svg>
-                    Sign In with Google
+                    {t("signInWithGoogle")}
                   </button>
 
                   <button className="flex justify-center items-center gap-3.5 rounded-lg border border-gray-3 bg-gray-1 p-3 ease-out duration-200 hover:bg-gray-2">
@@ -190,17 +192,17 @@ const Signin = () => {
                         fill="#15171A"
                       />
                     </svg>
-                    Sign Up with Github
+                    {t("signInWithGithub")}
                   </button>
                 </div>
 
                 <p className="text-center mt-6">
-                  Don&apos;t have an account?
+                  {t("dontHaveAccount")}
                   <Link
                     href="/signup"
                     className="text-dark ease-out duration-200 hover:text-blue pl-2"
                   >
-                    Sign Up Now!
+                    {t("signUpNow")}
                   </Link>
                 </p>
               </form>

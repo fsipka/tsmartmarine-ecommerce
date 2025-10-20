@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ApiResponse } from '../types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -116,18 +117,11 @@ export interface SparePartBrand {
   companyId: number | null;
 }
 
-export interface ApiResponse<T> {
-  data: T;
-  statusCode: number;
-  errors: string[] | null;
-}
-
 export const categoryService = {
   // Get all accessory categories
   getAccessoryCategories: async (): Promise<AccessoryCategory[]> => {
     try {
       const response = await publicClient.get<ApiResponse<AccessoryCategory[]>>('/accessorycategories');
-      console.log('Accessory Categories API Response:', JSON.stringify(response.data.data, null, 2));
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch accessory categories:', error);
@@ -139,7 +133,6 @@ export const categoryService = {
   getSparePartCategories: async (): Promise<SparePartCategory[]> => {
     try {
       const response = await publicClient.get<ApiResponse<SparePartCategory[]>>('/sparepartcategories');
-      console.log('Spare Part Categories API Response:', JSON.stringify(response.data.data, null, 2));
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch spare part categories:', error);
@@ -151,7 +144,6 @@ export const categoryService = {
   getServiceCategories: async (): Promise<ServiceCategory[]> => {
     try {
       const response = await publicClient.get<ApiResponse<ServiceCategory[]>>('/servicecategories');
-      console.log('Service Categories API Response:', JSON.stringify(response.data.data, null, 2));
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch service categories:', error);
@@ -163,7 +155,6 @@ export const categoryService = {
   getServiceSubCategories: async (): Promise<ServiceSubCategory[]> => {
     try {
       const response = await publicClient.get<ApiResponse<ServiceSubCategory[]>>('/servicesubcategories');
-      console.log('Service SubCategories API Response:', JSON.stringify(response.data.data, null, 2));
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch service subcategories:', error);
@@ -175,7 +166,6 @@ export const categoryService = {
   getAccessorySubCategories: async (): Promise<AccessorySubCategory[]> => {
     try {
       const response = await publicClient.get<ApiResponse<AccessorySubCategory[]>>('/accessorysubcategories');
-      console.log('Accessory SubCategories API Response:', JSON.stringify(response.data.data, null, 2));
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch accessory subcategories:', error);
@@ -187,7 +177,6 @@ export const categoryService = {
   getSparePartSubCategories: async (): Promise<SparePartSubCategory[]> => {
     try {
       const response = await publicClient.get<ApiResponse<SparePartSubCategory[]>>('/sparepartsubcategories');
-      console.log('Spare Part SubCategories API Response:', JSON.stringify(response.data.data, null, 2));
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch spare part subcategories:', error);
@@ -199,7 +188,6 @@ export const categoryService = {
   getYachtBrands: async (): Promise<YachtBrand[]> => {
     try {
       const response = await publicClient.get<ApiResponse<YachtBrand[]>>('/yachtbrands');
-      console.log('Yacht Brands API Response:', JSON.stringify(response.data.data, null, 2));
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch yacht brands:', error);
@@ -211,7 +199,6 @@ export const categoryService = {
   getSparePartBrands: async (): Promise<SparePartBrand[]> => {
     try {
       const response = await publicClient.get<ApiResponse<SparePartBrand[]>>('/sparepartbrands');
-      console.log('Spare Part Brands API Response:', JSON.stringify(response.data.data, null, 2));
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch spare part brands:', error);

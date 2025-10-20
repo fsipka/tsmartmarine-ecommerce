@@ -14,7 +14,7 @@ export interface CreatedByUser {
   updatedDate: string;
 }
 
-export interface Accessory {
+export interface OrderAccessory {
   id: number;
   name: string;
   code: string;
@@ -26,7 +26,7 @@ export interface Accessory {
   currencyType: number;
 }
 
-export interface SparePart {
+export interface OrderSparePart {
   id: number;
   name: string;
   code: string;
@@ -48,8 +48,8 @@ export interface OrderItem {
   quantity: number | null;
   unitPrice: number | null;
   lineTotal: number | null;
-  accessory: Accessory | null;
-  sparePart: SparePart | null;
+  accessory: OrderAccessory | null;
+  sparePart: OrderSparePart | null;
   service: any | null;
   yacht: any | null;
   createdDate: string;
@@ -94,7 +94,6 @@ export const orderService = {
   getWithDetails: async (orderId: number): Promise<Order> => {
     try {
       const response = await api.get<ApiResponse<Order>>(`/orders/getwithdetails/${orderId}`);
-      console.log('Order Details API Response:', JSON.stringify(response.data.data, null, 2));
       return response.data.data;
     } catch (error) {
       console.error('Failed to fetch order details:', error);
