@@ -1,10 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Breadcrumb from "@/components/Common/Breadcrumb";
 import toast from "react-hot-toast";
+import { useTranslations, useLocale } from "next-intl";
+import { COUNTRIES } from "@/constants/countries";
+import { supplierService } from "@/lib/api/services/supplier.service";
 
 const SupplierRegistrationPage = () => {
+  const t = useTranslations("supplier");
+  const locale = useLocale() as "en" | "tr" | "fr";
+  const router = useRouter();
   const [formData, setFormData] = useState({
     companyName: "",
     contactPerson: "",
@@ -22,8 +29,6 @@ const SupplierRegistrationPage = () => {
     numberOfEmployees: "",
     certifications: "",
     taxId: "",
-    bankName: "",
-    bankAccountNumber: "",
     additionalInfo: "",
   });
 
@@ -44,12 +49,30 @@ const SupplierRegistrationPage = () => {
     setIsSubmitting(true);
 
     try {
-      // TODO: Replace with actual API endpoint
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await supplierService.register({
+        companyName: formData.companyName,
+        contactPerson: formData.contactPerson,
+        email: formData.email,
+        phone: formData.phone,
+        website: formData.website,
+        address: formData.address,
+        city: formData.city,
+        country: formData.country,
+        postalCode: formData.postalCode,
+        businessType: formData.businessType,
+        productsServices: formData.productsServices,
+        yearsInBusiness: formData.yearsInBusiness,
+        annualRevenue: formData.annualRevenue,
+        numberOfEmployees: formData.numberOfEmployees,
+        certifications: formData.certifications,
+        taxId: formData.taxId,
+        additionalInfo: formData.additionalInfo,
+      });
 
-      toast.success("Your supplier registration has been submitted successfully! We will contact you soon.");
+      // Redirect to success page
+      router.push("/supplier-success");
 
-      // Reset form
+      // Reset form (optional, as user is leaving the page)
       setFormData({
         companyName: "",
         contactPerson: "",
@@ -67,12 +90,19 @@ const SupplierRegistrationPage = () => {
         numberOfEmployees: "",
         certifications: "",
         taxId: "",
-        bankName: "",
-        bankAccountNumber: "",
         additionalInfo: "",
       });
     } catch (error) {
-      toast.error("Failed to submit registration. Please try again.");
+      console.error("Supplier registration error:", error);
+
+      // Show the specific error message from the API
+      const errorMessage = error instanceof Error ? error.message : t("errorMessage");
+      toast.error(errorMessage, {
+        duration: 5000,
+        style: {
+          maxWidth: '500px',
+        },
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -80,17 +110,17 @@ const SupplierRegistrationPage = () => {
 
   return (
     <>
-      <Breadcrumb title="Become a Supplier" pages={["supplier registration"]} />
+      <Breadcrumb title={t("title")} pages={["supplier registration"]} />
 
       <section className="overflow-hidden pb-20 pt-10 lg:pt-20">
         <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
           <div className="bg-white rounded-lg shadow-1 p-6 md:p-10">
             <div className="mb-8">
               <h2 className="text-2xl md:text-3xl font-bold text-dark mb-4">
-                Supplier Registration Form
+                {t("formTitle")}
               </h2>
               <p className="text-gray-4">
-                Fill out the form below to register as a supplier. Our team will review your application and get back to you within 3-5 business days.
+                {t("formDescription")}
               </p>
             </div>
 
@@ -98,12 +128,12 @@ const SupplierRegistrationPage = () => {
               {/* Company Information */}
               <div className="mb-8">
                 <h3 className="text-xl font-semibold text-dark mb-4 pb-2 border-b border-gray-3">
-                  Company Information
+                  {t("companyInformation")}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-dark mb-2">
-                      Company Name <span className="text-red">*</span>
+                      {t("companyName")} <span className="text-red">{t("required")}</span>
                     </label>
                     <input
                       type="text"
@@ -112,13 +142,13 @@ const SupplierRegistrationPage = () => {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
-                      placeholder="Enter your company name"
+                      placeholder={t("companyNamePlaceholder")}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-dark mb-2">
-                      Contact Person <span className="text-red">*</span>
+                      {t("contactPerson")} <span className="text-red">{t("required")}</span>
                     </label>
                     <input
                       type="text"
@@ -127,13 +157,13 @@ const SupplierRegistrationPage = () => {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
-                      placeholder="Enter contact person name"
+                      placeholder={t("contactPersonPlaceholder")}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-dark mb-2">
-                      Email Address <span className="text-red">*</span>
+                      {t("emailAddress")} <span className="text-red">{t("required")}</span>
                     </label>
                     <input
                       type="email"
@@ -142,13 +172,13 @@ const SupplierRegistrationPage = () => {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
-                      placeholder="Enter your email"
+                      placeholder={t("emailPlaceholder")}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-dark mb-2">
-                      Phone Number <span className="text-red">*</span>
+                      {t("phoneNumber")} <span className="text-red">{t("required")}</span>
                     </label>
                     <input
                       type="tel"
@@ -157,13 +187,13 @@ const SupplierRegistrationPage = () => {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
-                      placeholder="Enter your phone number"
+                      placeholder={t("phonePlaceholder")}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-dark mb-2">
-                      Website
+                      {t("website")}
                     </label>
                     <input
                       type="url"
@@ -171,13 +201,13 @@ const SupplierRegistrationPage = () => {
                       value={formData.website}
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
-                      placeholder="https://www.example.com"
+                      placeholder={t("websitePlaceholder")}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-dark mb-2">
-                      Tax ID / VAT Number <span className="text-red">*</span>
+                      {t("taxId")} <span className="text-red">{t("required")}</span>
                     </label>
                     <input
                       type="text"
@@ -186,7 +216,7 @@ const SupplierRegistrationPage = () => {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
-                      placeholder="Enter your tax ID"
+                      placeholder={t("taxIdPlaceholder")}
                     />
                   </div>
                 </div>
@@ -195,12 +225,12 @@ const SupplierRegistrationPage = () => {
               {/* Address Information */}
               <div className="mb-8">
                 <h3 className="text-xl font-semibold text-dark mb-4 pb-2 border-b border-gray-3">
-                  Address Information
+                  {t("addressInformation")}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-dark mb-2">
-                      Street Address <span className="text-red">*</span>
+                      {t("streetAddress")} <span className="text-red">{t("required")}</span>
                     </label>
                     <input
                       type="text"
@@ -209,13 +239,13 @@ const SupplierRegistrationPage = () => {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
-                      placeholder="Enter your street address"
+                      placeholder={t("streetAddressPlaceholder")}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-dark mb-2">
-                      City <span className="text-red">*</span>
+                      {t("city")} <span className="text-red">{t("required")}</span>
                     </label>
                     <input
                       type="text"
@@ -224,28 +254,33 @@ const SupplierRegistrationPage = () => {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
-                      placeholder="Enter your city"
+                      placeholder={t("cityPlaceholder")}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-dark mb-2">
-                      Country <span className="text-red">*</span>
+                      {t("country")} <span className="text-red">{t("required")}</span>
                     </label>
-                    <input
-                      type="text"
+                    <select
                       name="country"
                       value={formData.country}
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
-                      placeholder="Enter your country"
-                    />
+                    >
+                      <option value="">{t("selectCountry")}</option>
+                      {COUNTRIES.map((country) => (
+                        <option key={country.id} value={country.id}>
+                          {country.name[locale]}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-dark mb-2">
-                      Postal Code <span className="text-red">*</span>
+                      {t("postalCode")} <span className="text-red">{t("required")}</span>
                     </label>
                     <input
                       type="text"
@@ -254,7 +289,7 @@ const SupplierRegistrationPage = () => {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
-                      placeholder="Enter postal code"
+                      placeholder={t("postalCodePlaceholder")}
                     />
                   </div>
                 </div>
@@ -263,12 +298,12 @@ const SupplierRegistrationPage = () => {
               {/* Business Details */}
               <div className="mb-8">
                 <h3 className="text-xl font-semibold text-dark mb-4 pb-2 border-b border-gray-3">
-                  Business Details
+                  {t("businessDetails")}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-dark mb-2">
-                      Business Type <span className="text-red">*</span>
+                      {t("businessType")} <span className="text-red">{t("required")}</span>
                     </label>
                     <select
                       name="businessType"
@@ -277,18 +312,18 @@ const SupplierRegistrationPage = () => {
                       required
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
                     >
-                      <option value="">Select business type</option>
-                      <option value="manufacturer">Manufacturer</option>
-                      <option value="distributor">Distributor</option>
-                      <option value="wholesaler">Wholesaler</option>
-                      <option value="service-provider">Service Provider</option>
-                      <option value="other">Other</option>
+                      <option value="">{t("selectBusinessType")}</option>
+                      <option value="manufacturer">{t("manufacturer")}</option>
+                      <option value="distributor">{t("distributor")}</option>
+                      <option value="wholesaler">{t("wholesaler")}</option>
+                      <option value="service-provider">{t("serviceProvider")}</option>
+                      <option value="other">{t("other")}</option>
                     </select>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-dark mb-2">
-                      Years in Business <span className="text-red">*</span>
+                      {t("yearsInBusiness")} <span className="text-red">{t("required")}</span>
                     </label>
                     <input
                       type="number"
@@ -298,13 +333,13 @@ const SupplierRegistrationPage = () => {
                       required
                       min="0"
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
-                      placeholder="Enter years in business"
+                      placeholder={t("yearsInBusinessPlaceholder")}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-dark mb-2">
-                      Annual Revenue (USD)
+                      {t("annualRevenue")}
                     </label>
                     <select
                       name="annualRevenue"
@@ -312,18 +347,18 @@ const SupplierRegistrationPage = () => {
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
                     >
-                      <option value="">Select revenue range</option>
-                      <option value="0-100k">$0 - $100,000</option>
-                      <option value="100k-500k">$100,000 - $500,000</option>
-                      <option value="500k-1m">$500,000 - $1,000,000</option>
-                      <option value="1m-5m">$1,000,000 - $5,000,000</option>
-                      <option value="5m+">$5,000,000+</option>
+                      <option value="">{t("selectRevenueRange")}</option>
+                      <option value="0-100k">{t("revenue0to100k")}</option>
+                      <option value="100k-500k">{t("revenue100kto500k")}</option>
+                      <option value="500k-1m">{t("revenue500kto1m")}</option>
+                      <option value="1m-5m">{t("revenue1mto5m")}</option>
+                      <option value="5m+">{t("revenue5mPlus")}</option>
                     </select>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-dark mb-2">
-                      Number of Employees
+                      {t("numberOfEmployees")}
                     </label>
                     <select
                       name="numberOfEmployees"
@@ -331,18 +366,18 @@ const SupplierRegistrationPage = () => {
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
                     >
-                      <option value="">Select range</option>
-                      <option value="1-10">1-10</option>
-                      <option value="11-50">11-50</option>
-                      <option value="51-200">51-200</option>
-                      <option value="201-500">201-500</option>
-                      <option value="500+">500+</option>
+                      <option value="">{t("selectRange")}</option>
+                      <option value="1-10">{t("employees1to10")}</option>
+                      <option value="11-50">{t("employees11to50")}</option>
+                      <option value="51-200">{t("employees51to200")}</option>
+                      <option value="201-500">{t("employees201to500")}</option>
+                      <option value="500+">{t("employees500Plus")}</option>
                     </select>
                   </div>
 
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-dark mb-2">
-                      Products/Services Offered <span className="text-red">*</span>
+                      {t("productsServices")} <span className="text-red">{t("required")}</span>
                     </label>
                     <textarea
                       name="productsServices"
@@ -351,13 +386,13 @@ const SupplierRegistrationPage = () => {
                       required
                       rows={4}
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue resize-none"
-                      placeholder="Describe the products or services you offer"
+                      placeholder={t("productsServicesPlaceholder")}
                     />
                   </div>
 
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-dark mb-2">
-                      Certifications (if any)
+                      {t("certifications")}
                     </label>
                     <textarea
                       name="certifications"
@@ -365,45 +400,7 @@ const SupplierRegistrationPage = () => {
                       onChange={handleChange}
                       rows={3}
                       className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue resize-none"
-                      placeholder="List any relevant certifications (ISO, CE, etc.)"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Banking Information */}
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold text-dark mb-4 pb-2 border-b border-gray-3">
-                  Banking Information
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-dark mb-2">
-                      Bank Name <span className="text-red">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="bankName"
-                      value={formData.bankName}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
-                      placeholder="Enter bank name"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-dark mb-2">
-                      Bank Account Number <span className="text-red">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="bankAccountNumber"
-                      value={formData.bankAccountNumber}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
-                      placeholder="Enter account number"
+                      placeholder={t("certificationsPlaceholder")}
                     />
                   </div>
                 </div>
@@ -412,11 +409,11 @@ const SupplierRegistrationPage = () => {
               {/* Additional Information */}
               <div className="mb-8">
                 <h3 className="text-xl font-semibold text-dark mb-4 pb-2 border-b border-gray-3">
-                  Additional Information
+                  {t("additionalInformation")}
                 </h3>
                 <div>
                   <label className="block text-sm font-medium text-dark mb-2">
-                    Additional Comments
+                    {t("additionalComments")}
                   </label>
                   <textarea
                     name="additionalInfo"
@@ -424,7 +421,7 @@ const SupplierRegistrationPage = () => {
                     onChange={handleChange}
                     rows={5}
                     className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue resize-none"
-                    placeholder="Any additional information you'd like to share..."
+                    placeholder={t("additionalCommentsPlaceholder")}
                   />
                 </div>
               </div>
@@ -436,7 +433,7 @@ const SupplierRegistrationPage = () => {
                   disabled={isSubmitting}
                   className="bg-blue text-white px-8 py-3 rounded-md font-medium hover:bg-blue-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? "Submitting..." : "Submit Application"}
+                  {isSubmitting ? t("submitting") : t("submitApplication")}
                 </button>
               </div>
             </form>

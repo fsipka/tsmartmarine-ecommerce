@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import Home from "@/components/Home";
 
 export const metadata: Metadata = {
-  title: "NextCommerce | Nextjs E-commerce template",
-  description: "This is Home for NextCommerce Template",
+  title: "Tsmart Marine Marketplace",
+  description: "Welcome to Tsmart Marine Marketplace",
 };
 
 export default function HomePage() {

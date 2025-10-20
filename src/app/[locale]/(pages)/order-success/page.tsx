@@ -3,7 +3,7 @@ import OrderSuccess from "@/components/OrderSuccess";
 
 import { Metadata } from "next";
 export const metadata: Metadata = {
-  title: "Order Success | NextCommerce Nextjs E-commerce template",
+  title: "Order Success | Tsmart Marine Marketplace",
   description: "Your order has been placed successfully",
 };
 
