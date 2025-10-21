@@ -4,6 +4,10 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { menuData } from "./menuData";
 import Dropdown from "./Dropdown";
+import YachtMegaMenu from "./YachtMegaMenu";
+import AccessoryMegaMenu from "./AccessoryMegaMenu";
+import ServiceMegaMenu from "./ServiceMegaMenu";
+import SparePartMegaMenu from "./SparePartMegaMenu";
 import { useAppSelector } from "@/redux/store";
 import { useSelector } from "react-redux";
 import { selectTotalPrice } from "@/redux/features/cart-slice";
@@ -605,7 +609,31 @@ const Header = () => {
               <nav>
                 <ul className="flex xl:items-center flex-col xl:flex-row gap-5 xl:gap-6">
                   {menuData.map((menuItem, i) =>
-                    menuItem.submenu ? (
+                    menuItem.megaMenu && menuItem.title === "Yachts" ? (
+                      <YachtMegaMenu
+                        key={i}
+                        menuItem={menuItem}
+                        stickyMenu={stickyMenu}
+                      />
+                    ) : menuItem.megaMenu && menuItem.title === "Accessories" ? (
+                      <AccessoryMegaMenu
+                        key={i}
+                        menuItem={menuItem}
+                        stickyMenu={stickyMenu}
+                      />
+                    ) : menuItem.megaMenu && menuItem.title === "Services" ? (
+                      <ServiceMegaMenu
+                        key={i}
+                        menuItem={menuItem}
+                        stickyMenu={stickyMenu}
+                      />
+                    ) : menuItem.megaMenu && menuItem.title === "Spare Parts" ? (
+                      <SparePartMegaMenu
+                        key={i}
+                        menuItem={menuItem}
+                        stickyMenu={stickyMenu}
+                      />
+                    ) : menuItem.submenu ? (
                       <Dropdown
                         key={i}
                         menuItem={menuItem}

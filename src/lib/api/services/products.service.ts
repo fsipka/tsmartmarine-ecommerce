@@ -102,6 +102,7 @@ export interface Product {
   description: string | null;
   price: number;
   type: 'yacht' | 'accessory' | 'spare-part' | 'service';
+  yachtBrandId?: number | null;
   brandId?: number | null;
   categoryId?: number | null;
   subCategoryId?: number | null;
@@ -241,7 +242,9 @@ export const productsService = {
           description: yacht.description,
           price: yacht.salePrice || yacht.price || 0,
           type: 'yacht' as const,
-          categoryId: yacht.yachtBrandId,
+          yachtBrandId: yacht.yachtBrandId,
+          brandId: yacht.yachtBrandId, // Map yachtBrandId to brandId for filtering
+          categoryId: yacht.yachtBrandId, // Keep for backward compatibility
           subCategoryId: yacht.yachtModelId,
           images: extractImageUrls(yacht.yachtFiles),
           yachtPrimaryFile: yacht.yachtPrimaryFile,
@@ -251,7 +254,7 @@ export const productsService = {
           id: accessory.id,
           name: accessory.name,
           description: accessory.description,
-          price: accessory.salePrice,
+          price: accessory.salePrice || accessory.purchasePrice || 0,
           type: 'accessory' as const,
           categoryId: accessory.accessoryCategoryId,
           subCategoryId: accessory.accessorySubCategoryId,
@@ -265,7 +268,7 @@ export const productsService = {
           id: sparePart.id,
           name: sparePart.name,
           description: sparePart.description,
-          price: sparePart.salePrice,
+          price: sparePart.salePrice || sparePart.purchasePrice || 0,
           type: 'spare-part' as const,
           brandId: sparePart.sparePartBrandId,
           categoryId: sparePart.sparePartCategoryId,

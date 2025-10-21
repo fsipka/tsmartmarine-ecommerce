@@ -27,22 +27,35 @@ export const cart = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addItemToCart: (state, action: PayloadAction<CartItem>) => {
-      const { id, title, price, quantity, discountedPrice, imgs, type } =
-        action.payload;
-      const existingItem = state.items.find((item) => item.id === id);
+    addItemToCart: (state, action: PayloadAction<any>) => {
+      const payload = action.payload;
+      const existingItem = state.items.find((item) => item.id === payload.id);
+
+      // Handle both old format and API format
+      const title = payload.title || payload.name || 'Product';
+      const price = payload.price || 0;
+      const discountedPrice = payload.discountedPrice || payload.price || price;
+
+      // Handle images - support both formats
+      let imgs = payload.imgs;
+      if (!imgs && payload.images && Array.isArray(payload.images)) {
+        imgs = {
+          thumbnails: payload.images,
+          previews: payload.images,
+        };
+      }
 
       if (existingItem) {
-        existingItem.quantity += quantity;
+        existingItem.quantity += payload.quantity || 1;
       } else {
         state.items.push({
-          id,
+          id: payload.id,
           title,
           price,
-          quantity,
+          quantity: payload.quantity || 1,
           discountedPrice,
           imgs,
-          type,
+          type: payload.type,
         });
       }
     },

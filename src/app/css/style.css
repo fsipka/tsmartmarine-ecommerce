@@ -18,6 +18,14 @@
     xl:translate-y-10 xl:opacity-0 xl:invisible xl:absolute xl:flex
     xl:group-hover:opacity-100 xl:group-hover:visible;
   }
+
+  .mega-menu {
+    @apply flex-col mt-2 lg:mt-0 bg-white shadow-2 ease-in duration-200 rounded-md border border-gray-3 left-0 right-0 hidden
+    xl:translate-y-10 xl:opacity-0 xl:invisible xl:absolute xl:flex
+    xl:group-hover:opacity-100 xl:group-hover:visible;
+    min-width: 800px;
+    max-width: 1200px;
+  }
 }
 
 @layer utilities {

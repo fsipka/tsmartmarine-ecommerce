@@ -49,16 +49,55 @@ const ProductItem = ({ item }: { item: Product }) => {
 
   // Get the image URL with fallback
   const getImageUrl = () => {
-    // If product has preview images, use the first one
-    if (item.imgs?.previews && item.imgs.previews.length > 0 && item.imgs.previews[0]) {
-      return item.imgs.previews[0];
-    }
+    try {
+      // Type assertion for API product type
+      const apiItem = item as any;
 
-    // Return null to show placeholder icon
-    return null;
+      // If product has preview images (old format), use the first one
+      if (apiItem?.imgs?.previews && apiItem.imgs.previews.length > 0 && apiItem.imgs.previews[0]) {
+        return apiItem.imgs.previews[0];
+      }
+
+      // If product has images array (API format), use the first one
+      if (apiItem?.images && Array.isArray(apiItem.images) && apiItem.images.length > 0) {
+        return apiItem.images[0];
+      }
+
+      // Check for primary file (yacht/accessory specific)
+      if (apiItem?.yachtPrimaryFile?.url) {
+        return `https://marineapi.tsmart.ai/contents/${apiItem.yachtPrimaryFile.url}`;
+      }
+
+      if (apiItem?.accessoryPrimaryFile?.url) {
+        return `https://marineapi.tsmart.ai/contents/${apiItem.accessoryPrimaryFile.url}`;
+      }
+
+      if (apiItem?.sparePartPrimaryFile?.url) {
+        return `https://marineapi.tsmart.ai/contents/${apiItem.sparePartPrimaryFile.url}`;
+      }
+
+      // Return null to show placeholder icon
+      return null;
+    } catch (error) {
+      console.error('Error getting image URL:', error);
+      return null;
+    }
   };
 
   const imageUrl = getImageUrl();
+
+  // Type assertion for API product type
+  const apiItem = item as any;
+
+  // Get title with fallback
+  const title = apiItem?.title || apiItem?.name || 'Product';
+
+  // Get price with fallback
+  const price = apiItem?.price || 0;
+  const discountedPrice = apiItem?.discountedPrice || apiItem?.price || price;
+
+  // Get reviews with fallback
+  const reviews = apiItem?.reviews || 0;
 
   return (
     <div className="group">
@@ -66,7 +105,7 @@ const ProductItem = ({ item }: { item: Product }) => {
         {imageUrl ? (
           <Image
             src={imageUrl}
-            alt={item.title || 'Product'}
+            alt={title}
             width={250}
             height={250}
             className="object-contain"
@@ -190,19 +229,21 @@ const ProductItem = ({ item }: { item: Product }) => {
           />
         </div>
 
-        <p className="text-custom-sm">({item.reviews})</p>
+        <p className="text-custom-sm">({reviews})</p>
       </div>
 
       <h3
         className="font-medium text-dark ease-out duration-200 hover:text-blue mb-1.5"
         onClick={() => handleProductDetails()}
       >
-        <Link href={`/shop-details?id=${item.id}&type=${item.type}`}> {item.title} </Link>
+        <Link href={`/shop-details?id=${apiItem?.id || ''}&type=${apiItem?.type || ''}`}> {title} </Link>
       </h3>
 
       <span className="flex items-center gap-2 font-medium text-lg">
-        <span className="text-dark">${item.discountedPrice}</span>
-        <span className="text-dark-4 line-through">${item.price}</span>
+        <span className="text-dark">${discountedPrice}</span>
+        {price !== discountedPrice && (
+          <span className="text-dark-4 line-through">${price}</span>
+        )}
       </span>
     </div>
   );

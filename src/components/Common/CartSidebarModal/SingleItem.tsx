@@ -10,18 +10,65 @@ const SingleItem = ({ item, removeItemFromCart }) => {
     dispatch(removeItemFromCart(item.id));
   };
 
+  // Get image URL with fallback
+  const getImageUrl = () => {
+    const apiItem = item as any;
+
+    if (apiItem?.imgs?.thumbnails && apiItem.imgs.thumbnails.length > 0 && apiItem.imgs.thumbnails[0]) {
+      return apiItem.imgs.thumbnails[0];
+    }
+
+    if (apiItem?.imgs?.previews && apiItem.imgs.previews.length > 0 && apiItem.imgs.previews[0]) {
+      return apiItem.imgs.previews[0];
+    }
+
+    if (apiItem?.images && Array.isArray(apiItem.images) && apiItem.images.length > 0) {
+      return apiItem.images[0];
+    }
+
+    if (apiItem?.yachtPrimaryFile?.url) {
+      return `https://marineapi.tsmart.ai/contents/${apiItem.yachtPrimaryFile.url}`;
+    }
+
+    if (apiItem?.accessoryPrimaryFile?.url) {
+      return `https://marineapi.tsmart.ai/contents/${apiItem.accessoryPrimaryFile.url}`;
+    }
+
+    if (apiItem?.sparePartPrimaryFile?.url) {
+      return `https://marineapi.tsmart.ai/contents/${apiItem.sparePartPrimaryFile.url}`;
+    }
+
+    return null;
+  };
+
+  const imageUrl = getImageUrl();
+  const apiItem = item as any;
+  const title = apiItem?.title || apiItem?.name || 'Product';
+  const price = apiItem?.discountedPrice || apiItem?.price || 0;
+
   return (
     <div className="flex items-center justify-between gap-5">
       <div className="w-full flex items-center gap-6">
         <div className="flex items-center justify-center rounded-[10px] bg-gray-3 max-w-[90px] w-full h-22.5">
-          <Image src={item.imgs?.thumbnails[0]} alt="product" width={100} height={100} />
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt="product"
+              width={100}
+              height={100}
+              className="object-contain"
+              unoptimized={imageUrl.startsWith('http')}
+            />
+          ) : (
+            <div className="text-gray-4 text-xs">No Image</div>
+          )}
         </div>
 
         <div>
           <h3 className="font-medium text-dark mb-1 ease-out duration-200 hover:text-blue">
-            <a href="#"> {item.title} </a>
+            <a href="#"> {title} </a>
           </h3>
-          <p className="text-custom-sm">Price: ${item.discountedPrice}</p>
+          <p className="text-custom-sm">Price: ${price}</p>
         </div>
       </div>
 

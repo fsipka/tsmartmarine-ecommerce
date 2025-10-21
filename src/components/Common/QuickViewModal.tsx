@@ -26,6 +26,47 @@ const QuickViewModal = () => {
 
   const [activePreview, setActivePreview] = useState(0);
 
+  // Helper function to get images array
+  const getImages = () => {
+    const apiProduct = product as any;
+
+    // Check for imgs.previews (old format)
+    if (apiProduct?.imgs?.previews && Array.isArray(apiProduct.imgs.previews) && apiProduct.imgs.previews.length > 0) {
+      return apiProduct.imgs.previews;
+    }
+
+    // Check for imgs.thumbnails (old format)
+    if (apiProduct?.imgs?.thumbnails && Array.isArray(apiProduct.imgs.thumbnails) && apiProduct.imgs.thumbnails.length > 0) {
+      return apiProduct.imgs.thumbnails;
+    }
+
+    // Check for images array (API format)
+    if (apiProduct?.images && Array.isArray(apiProduct.images) && apiProduct.images.length > 0) {
+      return apiProduct.images;
+    }
+
+    // Check for primary file
+    if (apiProduct?.yachtPrimaryFile?.url) {
+      return [`https://marineapi.tsmart.ai/contents/${apiProduct.yachtPrimaryFile.url}`];
+    }
+
+    if (apiProduct?.accessoryPrimaryFile?.url) {
+      return [`https://marineapi.tsmart.ai/contents/${apiProduct.accessoryPrimaryFile.url}`];
+    }
+
+    if (apiProduct?.sparePartPrimaryFile?.url) {
+      return [`https://marineapi.tsmart.ai/contents/${apiProduct.sparePartPrimaryFile.url}`];
+    }
+
+    return [];
+  };
+
+  const images = getImages();
+  const apiProduct = product as any;
+  const title = apiProduct?.title || apiProduct?.name || 'Product';
+  const price = apiProduct?.price || 0;
+  const discountedPrice = apiProduct?.discountedPrice || apiProduct?.price || price;
+
   // preview modal
   const handlePreviewSlider = () => {
     dispatch(updateproductDetails({
@@ -101,7 +142,7 @@ const QuickViewModal = () => {
             <div className="max-w-[526px] w-full">
               <div className="flex gap-5">
                 <div className="flex flex-col gap-5">
-                  {product.imgs.thumbnails?.map((img, key) =>
+                  {images.map((img, key) =>
                     img ? (
                       <button
                         onClick={() => setActivePreview(key)}
@@ -115,7 +156,8 @@ const QuickViewModal = () => {
                           alt="thumbnail"
                           width={61}
                           height={61}
-                          className="aspect-square"
+                          className="aspect-square object-contain"
+                          unoptimized={img.startsWith('http')}
                         />
                       </button>
                     ) : null
@@ -146,13 +188,17 @@ const QuickViewModal = () => {
                       </svg>
                     </button>
 
-                    {product?.imgs?.previews?.[activePreview] && (
+                    {images[activePreview] ? (
                       <Image
-                        src={product.imgs.previews[activePreview]}
+                        src={images[activePreview]}
                         alt="products-details"
                         width={400}
                         height={400}
+                        className="object-contain"
+                        unoptimized={images[activePreview].startsWith('http')}
                       />
+                    ) : (
+                      <div className="text-gray-4">No Image Available</div>
                     )}
                   </div>
                 </div>
@@ -165,7 +211,7 @@ const QuickViewModal = () => {
               </span>
 
               <h3 className="font-semibold text-xl xl:text-heading-5 text-dark mb-4">
-                {product.title}
+                {title}
               </h3>
 
               <div className="flex flex-wrap items-center gap-5 mb-6">
@@ -313,9 +359,9 @@ const QuickViewModal = () => {
                 </div>
               </div>
 
-              {product.description && (
+              {apiProduct?.description && (
                 <p className="text-gray-4 mb-6">
-                  {product.description}
+                  {apiProduct.description}
                 </p>
               )}
 
@@ -327,11 +373,13 @@ const QuickViewModal = () => {
 
                   <span className="flex items-center gap-2">
                     <span className="font-semibold text-dark text-xl xl:text-heading-4">
-                      ${formatPrice(product.discountedPrice)}
+                      ${formatPrice(discountedPrice)}
                     </span>
-                    <span className="font-medium text-dark-4 text-lg xl:text-2xl line-through">
-                      ${formatPrice(product.price)}
-                    </span>
+                    {price !== discountedPrice && (
+                      <span className="font-medium text-dark-4 text-lg xl:text-2xl line-through">
+                        ${formatPrice(price)}
+                      </span>
+                    )}
                   </span>
                 </div>
 

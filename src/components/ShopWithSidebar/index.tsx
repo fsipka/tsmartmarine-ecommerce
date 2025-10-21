@@ -4,9 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import Breadcrumb from "../Common/Breadcrumb";
 import CustomSelect from "./CustomSelect";
-import CategoryDropdown from "./CategoryDropdown";
 import YachtBrandsDropdown from "./YachtBrandsDropdown";
-import SparePartBrandsDropdown from "./SparePartBrandsDropdown";
 import PriceDropdown from "./PriceDropdown";
 import shopData from "../Shop/shopData";
 import SingleGridItem from "../Shop/SingleGridItem";
@@ -245,7 +243,8 @@ const ShopWithSidebar = () => {
           const numericBrands = selectedFilters.yachtBrands.filter(id => typeof id === 'number');
           if (numericBrands.length > 0) {
             yachtFiltered = yachtFiltered.filter(p =>
-              p.categoryId && numericBrands.includes(p.categoryId as number)
+              (p.yachtBrandId && numericBrands.includes(p.yachtBrandId as number)) ||
+              (p.brandId && numericBrands.includes(p.brandId as number))
             );
           }
         }
@@ -303,7 +302,8 @@ const ShopWithSidebar = () => {
           const numericBrands = selectedFilters.yachtBrands.filter(id => typeof id === 'number');
           if (numericBrands.length > 0) {
             filtered = filtered.filter(p =>
-              p.categoryId && numericBrands.includes(p.categoryId as number)
+              (p.yachtBrandId && numericBrands.includes(p.yachtBrandId as number)) ||
+              (p.brandId && numericBrands.includes(p.brandId as number))
             );
           }
         }
@@ -430,6 +430,8 @@ const ShopWithSidebar = () => {
 
     setSelectedFilters(prev => ({
       ...prev,
+      // Clear brand filters when selecting a model, since model already implies the brand
+      yachtBrands: [],
       yachtModels: isAllOption
         ? prev.yachtModels.includes(modelId)
           ? prev.yachtModels.filter(id => id !== modelId)
@@ -689,19 +691,6 @@ const ShopWithSidebar = () => {
                     </div>
                   </div>
 
-                  {/* <!-- category box --> */}
-                  <CategoryDropdown
-                    categories={categories}
-                    onLoadSubcategories={handleLoadSubcategories}
-                    isLoadingSubcategories={loadingSubcategories}
-                    onCategorySelect={handleCategorySelect}
-                    selectedCategories={new Set([
-                      ...(selectedFilters.mainCategory ? [selectedFilters.mainCategory] : []),
-                      ...selectedFilters.subCategories,
-                      ...selectedFilters.allSelections,
-                    ])}
-                  />
-
                   {/* <!-- yacht brands box --> */}
                   <YachtBrandsDropdown
                     brands={yachtBrands}
@@ -709,13 +698,7 @@ const ShopWithSidebar = () => {
                     onModelSelect={handleYachtModelSelect}
                     selectedBrands={new Set(selectedFilters.yachtBrands)}
                     selectedModels={new Set(selectedFilters.yachtModels)}
-                  />
-
-                  {/* <!-- spare part brands box --> */}
-                  <SparePartBrandsDropdown
-                    brands={sparePartBrands}
-                    onBrandSelect={handleSparePartBrandSelect}
-                    selectedBrands={new Set(selectedFilters.sparePartBrands)}
+                    allProducts={allProducts}
                   />
 
                   {/* // <!-- price range box --> */}

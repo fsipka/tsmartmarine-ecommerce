@@ -12,11 +12,24 @@ const publicClient = axios.create({
   timeout: 30000,
 });
 
+export interface CategoryFile {
+  id: number;
+  name: string;
+  url: string;
+  isDocument: boolean;
+  isPrimary: boolean;
+  createdDate: string | null;
+  updatedDate: string | null;
+  companyId: number | null;
+}
+
 export interface AccessoryCategory {
   id: number;
   name: string;
   description: string | null;
   parentCategoryId: number | null;
+  accessoryCategoryFiles?: CategoryFile[];
+  accessoryCategoryPrimaryFile?: CategoryFile | null;
   createdDate: string;
   updatedDate: string;
   companyId: number;
@@ -27,6 +40,8 @@ export interface SparePartCategory {
   name: string;
   description: string | null;
   parentCategoryId: number | null;
+  sparePartCategoryFiles?: CategoryFile[];
+  sparePartCategoryPrimaryFile?: CategoryFile | null;
   createdDate: string;
   updatedDate: string;
   companyId: number;
@@ -37,6 +52,8 @@ export interface ServiceCategory {
   name: string;
   description: string | null;
   parentCategoryId: number | null;
+  serviceCategoryFiles?: CategoryFile[];
+  serviceCategoryPrimaryFile?: CategoryFile | null;
   createdDate: string;
   updatedDate: string;
   companyId: number;
@@ -46,7 +63,8 @@ export interface ServiceSubCategory {
   id: number;
   name: string;
   serviceCategoryId: number;
-  files: any | null;
+  serviceSubCategoryFiles?: CategoryFile[];
+  serviceSubCategoryPrimaryFile?: CategoryFile | null;
   createdDate: string;
   updatedDate: string;
   companyId: number | null;
@@ -56,7 +74,8 @@ export interface AccessorySubCategory {
   id: number;
   name: string;
   accessoryCategoryId: number;
-  files: any | null;
+  accessorySubCategoryFiles?: CategoryFile[];
+  accessorySubCategoryPrimaryFile?: CategoryFile | null;
   createdDate: string;
   updatedDate: string;
   companyId: number | null;
@@ -66,9 +85,22 @@ export interface SparePartSubCategory {
   id: number;
   name: string;
   sparePartCategoryId: number;
-  files: any | null;
+  sparePartSubCategoryFiles?: CategoryFile[];
+  sparePartSubCategoryPrimaryFile?: CategoryFile | null;
   createdDate: string;
   updatedDate: string;
+  companyId: number | null;
+}
+
+export interface YachtBrandFile {
+  id: number;
+  yachtBrandId: number;
+  name: string;
+  url: string;
+  isDocument: boolean;
+  isPrimary: boolean;
+  createdDate: string | null;
+  updatedDate: string | null;
   companyId: number | null;
 }
 
@@ -99,8 +131,8 @@ export interface YachtBrand {
   name: string;
   code: string;
   yachtModels: YachtModel[];
-  yachtBrandFiles: any[];
-  yachtBrandPrimaryFile: any | null;
+  yachtBrandFiles: YachtBrandFile[];
+  yachtBrandPrimaryFile: YachtBrandFile | null;
   files: any | null;
   createdDate: string | null;
   updatedDate: string | null;
@@ -111,7 +143,8 @@ export interface SparePartBrand {
   id: number;
   name: string;
   code: string;
-  files: any | null;
+  sparePartBrandFiles?: CategoryFile[];
+  sparePartBrandPrimaryFile?: CategoryFile | null;
   createdDate: string | null;
   updatedDate: string | null;
   companyId: number | null;

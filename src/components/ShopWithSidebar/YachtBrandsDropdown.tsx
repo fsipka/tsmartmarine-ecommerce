@@ -23,6 +23,8 @@ interface YachtBrandItemProps {
   selectedModels?: Set<number | string>;
   searchQuery?: string;
   t: any;
+  getBrandCount?: (brandId: number | string) => number;
+  getModelCount?: (modelId: number | string) => number;
 }
 
 const YachtBrandItem = ({
@@ -33,11 +35,14 @@ const YachtBrandItem = ({
   selectedBrands,
   selectedModels,
   searchQuery,
-  t
+  t,
+  getBrandCount,
+  getModelCount
 }: YachtBrandItemProps) => {
   const [expanded, setExpanded] = useState(false);
   const hasModels = brand.yachtModels && brand.yachtModels.length > 0;
   const isBrandSelected = selectedBrands?.has(brand.id) || false;
+  const brandCount = getBrandCount ? getBrandCount(brand.id) : 0;
 
   // Check if any model matches the search
   const hasMatchingModel = (brand: YachtBrand, query: string): boolean => {
@@ -118,7 +123,10 @@ const YachtBrandItem = ({
           </div>
         )}
 
-        <span className={`${hasModels ? "font-medium" : ""}`}>{brand.name}</span>
+        <span className={`${hasModels ? "font-medium" : ""} flex-1`}>{brand.name}</span>
+        {brandCount > 0 && (
+          <span className="text-gray-4 text-sm">({brandCount})</span>
+        )}
       </button>
 
       {hasModels && expanded && (
@@ -157,13 +165,17 @@ const YachtBrandItem = ({
                     />
                   </svg>
                 </div>
-                <span>{t("common.all")}</span>
+                <span className="flex-1">{t("common.all")}</span>
+                {brandCount > 0 && (
+                  <span className="text-gray-4 text-sm">({brandCount})</span>
+                )}
               </button>
             );
           })()}
 
           {brand.yachtModels.map((model) => {
             const isModelSelected = selectedModels?.has(model.id) || false;
+            const modelCount = getModelCount ? getModelCount(model.id) : 0;
             return (
               <button
                 key={model.id}
@@ -194,7 +206,10 @@ const YachtBrandItem = ({
                     />
                   </svg>
                 </div>
-                <span>{model.name}</span>
+                <span className="flex-1">{model.name}</span>
+                {modelCount > 0 && (
+                  <span className="text-gray-4 text-sm">({modelCount})</span>
+                )}
               </button>
             );
           })}
@@ -204,12 +219,21 @@ const YachtBrandItem = ({
   );
 };
 
+interface Product {
+  id: number;
+  type: string;
+  yachtBrandId?: number | null;
+  brandId?: number | null;
+  subCategoryId?: number | null;
+}
+
 interface YachtBrandsDropdownProps {
   brands: YachtBrand[];
   onBrandSelect?: (brandId: number | string) => void;
   onModelSelect?: (modelId: number | string) => void;
   selectedBrands?: Set<number | string>;
   selectedModels?: Set<number | string>;
+  allProducts?: Product[];
 }
 
 const YachtBrandsDropdown = ({
@@ -217,7 +241,8 @@ const YachtBrandsDropdown = ({
   onBrandSelect,
   onModelSelect,
   selectedBrands,
-  selectedModels
+  selectedModels,
+  allProducts = []
 }: YachtBrandsDropdownProps) => {
   const t = useTranslations();
   const [toggleDropdown, setToggleDropdown] = useState(true);
@@ -226,6 +251,25 @@ const YachtBrandsDropdown = ({
   // Create "All" brand option
   const allBrandId = 'all-brands';
   const isAllBrandsSelected = selectedBrands?.has(allBrandId) || false;
+
+  // Calculate product counts
+  const getYachtCount = () => {
+    return allProducts.filter(p => p.type === 'yacht').length;
+  };
+
+  const getBrandCount = (brandId: number | string) => {
+    return allProducts.filter(p =>
+      p.type === 'yacht' &&
+      (p.yachtBrandId === brandId || p.brandId === brandId)
+    ).length;
+  };
+
+  const getModelCount = (modelId: number | string) => {
+    return allProducts.filter(p =>
+      p.type === 'yacht' &&
+      p.subCategoryId === modelId
+    ).length;
+  };
 
   // Filter brand and its models based on search
   const filterBrandTree = (brand: YachtBrand, query: string): YachtBrand | null => {
@@ -347,7 +391,10 @@ const YachtBrandsDropdown = ({
                 />
               </svg>
             </div>
-            <span>{t("common.all")}</span>
+            <span className="flex-1">{t("common.all")}</span>
+            {getYachtCount() > 0 && (
+              <span className="text-gray-4 text-sm">({getYachtCount()})</span>
+            )}
           </button>
 
           {filteredBrands.length > 0 ? (
@@ -361,6 +408,8 @@ const YachtBrandsDropdown = ({
                 selectedModels={selectedModels}
                 searchQuery={searchQuery}
                 t={t}
+                getBrandCount={getBrandCount}
+                getModelCount={getModelCount}
               />
             ))
           ) : (
