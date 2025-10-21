@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 const ShopYachtPage = () => {
   return (
     <main>
-      <ShopWithSidebar defaultType="yacht" />
+      <ShopWithSidebar />
     </main>
   );
 };
