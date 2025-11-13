@@ -12,7 +12,7 @@ While NextMerce Pro features advanced functionalities, seamless integration, and
 | ✨ Features                         | 🎁 NextMerce Free                 | 🔥 NextMerce Pro                        |
 |----------------------------------|--------------------------------|--------------------------------------|
 | Next.js Pages                    | Static                         | Dynamic Boilerplate Template         |
-| Components                       | Limited                        | All According to Demo                |
+| Components                       | Limited                        | All Accordingx to Demo                |
 | eCommerce Functionality          | Included                       | Included                             |
 | Integrations (DB, Auth, etc.)    | Not Included                   | Included                             |
 | Community Support                | Included                       | Included                             |
