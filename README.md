@@ -15,7 +15,7 @@ While NextMerce Pro features advanced functionalities, seamless integration, and
 | Components                       | Limited                        | All Accordingx to Demo                |
 | eCommerce Functionality          | Included                       | Included                             |
 | Integrations (DB, Auth, etc.)    | Not Included                   | Included                             |
-| Community Support                | Included                       | Included                             |
+| Community Support                | Included                       | Included                             | 
 | Premium Email Support            | Not Included                   | Included                             |
 | Lifetime Free Updates            | Included                       | Included                             |
 
