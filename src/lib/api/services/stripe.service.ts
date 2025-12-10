@@ -12,7 +12,7 @@ export interface PaymentIntentResponse {
 
 export const stripeService = {
   // Create Payment Intent using TSmart Marine API
-  createPaymentIntent: async (amount: number, currency: string = 'usd'): Promise<string> => {
+  createPaymentIntent: async (amount: number, currency: string = 'eur'): Promise<string> => {
     try {
       const requestPayload: CreatePaymentIntentRequest = {
         amount: Math.round(amount * 100), // Convert to cents
