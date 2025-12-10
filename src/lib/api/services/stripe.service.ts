@@ -23,8 +23,8 @@ export const stripeService = {
         '/stripe/CreatePaymentIntent',
         requestPayload
       );
-
-      const clientSecret = response.data.data?.clientSecret;
+console.log(response)
+      const clientSecret = response.data.data?.clientSecret || response.data?.clientSecret;
 
       if (!clientSecret) {
         throw new Error('Client Secret not received from API');

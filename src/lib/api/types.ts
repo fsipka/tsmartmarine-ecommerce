@@ -1,5 +1,6 @@
 // API Response Types
 export interface ApiResponse<T = any> {
+  clientSecret: string;
   data: T;
   success: boolean;
   message?: string;
