@@ -14,7 +14,7 @@
     "autoprefixer": "10.4.15",
     "axios": "^1.12.2",
     "jwt-decode": "^4.0.0",
-    "next": "15.2.3",
+    "next": "15.2.8",
     "next-auth": "^4.24.11",
     "next-intl": "^4.3.12",
     "postcss": "8.4.29",
