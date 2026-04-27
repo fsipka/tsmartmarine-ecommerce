@@ -1,9 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import Image from "next/image";
-import { categoryService, AccessoryCategory, AccessorySubCategory } from "@/lib/api/services/category.service";
+import { useState, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import Image from 'next/image';
+import {
+  categoryService,
+  AccessoryCategory,
+  AccessorySubCategory,
+} from '@/lib/api/services/category.service';
 
 interface AccessoryMegaMenuProps {
   menuItem: {
@@ -16,10 +20,15 @@ interface AccessoryMegaMenuProps {
 
 const CONTENT_BASE_URL = 'https://marineapi.tsmart.ai/contents/';
 
-const AccessoryMegaMenu = ({ menuItem, stickyMenu }: AccessoryMegaMenuProps) => {
+const AccessoryMegaMenu = ({
+  menuItem,
+  stickyMenu,
+}: AccessoryMegaMenuProps) => {
   const [dropdownToggler, setDropdownToggler] = useState(false);
   const [categories, setCategories] = useState<AccessoryCategory[]>([]);
-  const [subCategories, setSubCategories] = useState<AccessorySubCategory[]>([]);
+  const [subCategories, setSubCategories] = useState<AccessorySubCategory[]>(
+    [],
+  );
   const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const pathUrl = usePathname();
@@ -30,12 +39,12 @@ const AccessoryMegaMenu = ({ menuItem, stickyMenu }: AccessoryMegaMenuProps) => 
       try {
         const [cats, subCats] = await Promise.all([
           categoryService.getAccessoryCategories(),
-          categoryService.getAccessorySubCategories()
+          categoryService.getAccessorySubCategories(),
         ]);
         setCategories(cats);
         setSubCategories(subCats);
       } catch (error) {
-        console.error("Failed to fetch accessory categories:", error);
+        console.error('Failed to fetch accessory categories:', error);
       } finally {
         setLoading(false);
       }
@@ -56,26 +65,42 @@ const AccessoryMegaMenu = ({ menuItem, stickyMenu }: AccessoryMegaMenuProps) => 
 
   // Get subcategories for hovered category
   const getSubCategoriesForCategory = (categoryId: number) => {
-    return subCategories.filter(sub => sub.accessoryCategoryId === categoryId);
+    return subCategories.filter(
+      (sub) => sub.accessoryCategoryId === categoryId,
+    );
   };
 
   // Get image URL for category
   const getCategoryImageUrl = (category: AccessoryCategory) => {
-    if (category.accessoryCategoryPrimaryFile && category.accessoryCategoryPrimaryFile.url) {
+    if (
+      category.accessoryCategoryPrimaryFile &&
+      category.accessoryCategoryPrimaryFile.url
+    ) {
       return `${CONTENT_BASE_URL}${category.accessoryCategoryPrimaryFile.url}`;
     }
-    if (category.accessoryCategoryFiles && category.accessoryCategoryFiles.length > 0 && category.accessoryCategoryFiles[0].url) {
-      return `${CONTENT_BASE_URL}${category.accessoryCategoryFiles[0].url}`;
+    if (
+      category.accessoryCategoryFile &&
+      category.accessoryCategoryFile.length > 0 &&
+      category.accessoryCategoryFile[0].url
+    ) {
+      return `${CONTENT_BASE_URL}${category.accessoryCategoryFile[0].url}`;
     }
     return null;
   };
 
   // Get image URL for subcategory
   const getSubCategoryImageUrl = (subCategory: AccessorySubCategory) => {
-    if (subCategory.accessorySubCategoryPrimaryFile && subCategory.accessorySubCategoryPrimaryFile.url) {
+    if (
+      subCategory.accessorySubCategoryPrimaryFile &&
+      subCategory.accessorySubCategoryPrimaryFile.url
+    ) {
       return `${CONTENT_BASE_URL}${subCategory.accessorySubCategoryPrimaryFile.url}`;
     }
-    if (subCategory.accessorySubCategoryFiles && subCategory.accessorySubCategoryFiles.length > 0 && subCategory.accessorySubCategoryFiles[0].url) {
+    if (
+      subCategory.accessorySubCategoryFiles &&
+      subCategory.accessorySubCategoryFiles.length > 0 &&
+      subCategory.accessorySubCategoryFiles[0].url
+    ) {
       return `${CONTENT_BASE_URL}${subCategory.accessorySubCategoryFiles[0].url}`;
     }
     return null;
@@ -89,18 +114,18 @@ const AccessoryMegaMenu = ({ menuItem, stickyMenu }: AccessoryMegaMenuProps) => 
         setHoveredCategory(null);
       }}
       className={`group relative before:w-0 before:h-[3px] before:bg-blue before:absolute before:left-0 before:top-0 before:rounded-b-[3px] before:ease-out before:duration-200 hover:before:w-full ${
-        pathUrl.includes("accessory") && "before:!w-full"
+        pathUrl.includes('accessory') && 'before:!w-full'
       }`}
     >
       <a
         href={menuItem.path}
         onClick={(e) => {
           e.preventDefault();
-          router.push(menuItem.path || "/shop-accessory");
+          router.push(menuItem.path || '/shop-accessory');
         }}
         className={`hover:text-blue text-custom-sm font-medium text-dark flex items-center gap-1.5 capitalize ${
-          stickyMenu ? "xl:py-4" : "xl:py-6"
-        } ${pathUrl.includes("accessory") && "!text-blue"}`}
+          stickyMenu ? 'xl:py-4' : 'xl:py-6'
+        } ${pathUrl.includes('accessory') && '!text-blue'}`}
       >
         {menuItem.title}
         <svg
@@ -122,10 +147,10 @@ const AccessoryMegaMenu = ({ menuItem, stickyMenu }: AccessoryMegaMenuProps) => 
 
       {/* Mega Menu Dropdown */}
       <div
-        className={`mega-menu ${dropdownToggler && "flex"} ${
+        className={`mega-menu ${dropdownToggler && 'flex'} ${
           stickyMenu
-            ? "xl:group-hover:translate-y-0"
-            : "xl:group-hover:translate-y-0"
+            ? 'xl:group-hover:translate-y-0'
+            : 'xl:group-hover:translate-y-0'
         }`}
       >
         <div className="w-full bg-white rounded-lg shadow-lg flex max-h-[500px]">
@@ -141,7 +166,9 @@ const AccessoryMegaMenu = ({ menuItem, stickyMenu }: AccessoryMegaMenuProps) => 
             <>
               {/* Left side - Categories */}
               <div className="w-1/3 border-r border-gray-3 p-4 overflow-y-auto">
-                <h3 className="text-sm font-semibold text-dark mb-3 px-2">Categories</h3>
+                <h3 className="text-sm font-semibold text-dark mb-3 px-2">
+                  Categories
+                </h3>
                 <div className="space-y-2">
                   {categories.map((category) => {
                     const imageUrl = getCategoryImageUrl(category);
@@ -152,8 +179,8 @@ const AccessoryMegaMenu = ({ menuItem, stickyMenu }: AccessoryMegaMenuProps) => 
                         onMouseEnter={() => setHoveredCategory(category.id)}
                         className={`group w-full flex items-center gap-3 p-2 rounded border transition-all ${
                           hoveredCategory === category.id
-                            ? "border-blue bg-blue/10"
-                            : "border-gray-3 hover:border-blue hover:shadow-sm"
+                            ? 'border-blue bg-blue/10'
+                            : 'border-gray-3 hover:border-blue hover:shadow-sm'
                         }`}
                       >
                         <div className="relative w-12 h-12 flex-shrink-0 bg-gray-1 rounded overflow-hidden">
@@ -183,9 +210,13 @@ const AccessoryMegaMenu = ({ menuItem, stickyMenu }: AccessoryMegaMenuProps) => 
                             </div>
                           )}
                         </div>
-                        <span className={`text-sm font-medium flex-1 line-clamp-2 text-left ${
-                          hoveredCategory === category.id ? "text-blue" : "text-dark group-hover:text-blue"
-                        }`}>
+                        <span
+                          className={`text-sm font-medium flex-1 line-clamp-2 text-left ${
+                            hoveredCategory === category.id
+                              ? 'text-blue'
+                              : 'text-dark group-hover:text-blue'
+                          }`}
+                        >
                           {category.name}
                         </span>
                       </button>
@@ -199,53 +230,62 @@ const AccessoryMegaMenu = ({ menuItem, stickyMenu }: AccessoryMegaMenuProps) => 
                 {hoveredCategory ? (
                   <>
                     <h3 className="text-sm font-semibold text-dark mb-3">
-                      {categories.find(c => c.id === hoveredCategory)?.name} - Subcategories
+                      {categories.find((c) => c.id === hoveredCategory)?.name} -
+                      Subcategories
                     </h3>
                     <div className="grid grid-cols-2 gap-2">
-                      {getSubCategoriesForCategory(hoveredCategory).length > 0 ? (
-                        getSubCategoriesForCategory(hoveredCategory).map((subCategory) => {
-                          const imageUrl = getSubCategoryImageUrl(subCategory);
-                          return (
-                            <button
-                              key={subCategory.id}
-                              onClick={() => handleSubCategoryClick(subCategory.id)}
-                              className="group flex items-center gap-2 p-2 rounded border border-gray-3 hover:border-blue hover:shadow-sm transition-all text-left"
-                            >
-                              <div className="relative w-10 h-10 flex-shrink-0 bg-gray-1 rounded overflow-hidden">
-                                {imageUrl ? (
-                                  <Image
-                                    src={imageUrl}
-                                    alt={subCategory.name}
-                                    fill
-                                    className="object-contain p-1"
-                                    unoptimized={imageUrl.startsWith('http')}
-                                  />
-                                ) : (
-                                  <div className="absolute inset-0 flex items-center justify-center text-gray-4">
-                                    <svg
-                                      className="w-5 h-5"
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      stroke="currentColor"
-                                    >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={1.5}
-                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                      />
-                                    </svg>
-                                  </div>
-                                )}
-                              </div>
-                              <span className="text-xs font-medium text-dark group-hover:text-blue transition-colors flex-1 line-clamp-2">
-                                {subCategory.name}
-                              </span>
-                            </button>
-                          );
-                        })
+                      {getSubCategoriesForCategory(hoveredCategory).length >
+                      0 ? (
+                        getSubCategoriesForCategory(hoveredCategory).map(
+                          (subCategory) => {
+                            const imageUrl =
+                              getSubCategoryImageUrl(subCategory);
+                            return (
+                              <button
+                                key={subCategory.id}
+                                onClick={() =>
+                                  handleSubCategoryClick(subCategory.id)
+                                }
+                                className="group flex items-center gap-2 p-2 rounded border border-gray-3 hover:border-blue hover:shadow-sm transition-all text-left"
+                              >
+                                <div className="relative w-10 h-10 flex-shrink-0 bg-gray-1 rounded overflow-hidden">
+                                  {imageUrl ? (
+                                    <Image
+                                      src={imageUrl}
+                                      alt={subCategory.name}
+                                      fill
+                                      className="object-contain p-1"
+                                      unoptimized={imageUrl.startsWith('http')}
+                                    />
+                                  ) : (
+                                    <div className="absolute inset-0 flex items-center justify-center text-gray-4">
+                                      <svg
+                                        className="w-5 h-5"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth={1.5}
+                                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                        />
+                                      </svg>
+                                    </div>
+                                  )}
+                                </div>
+                                <span className="text-xs font-medium text-dark group-hover:text-blue transition-colors flex-1 line-clamp-2">
+                                  {subCategory.name}
+                                </span>
+                              </button>
+                            );
+                          },
+                        )
                       ) : (
-                        <p className="text-sm text-gray-4 col-span-2">No subcategories available</p>
+                        <p className="text-sm text-gray-4 col-span-2">
+                          No subcategories available
+                        </p>
                       )}
                     </div>
                   </>

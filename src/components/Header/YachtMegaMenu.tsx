@@ -48,8 +48,8 @@ const YachtMegaMenu = ({ menuItem, stickyMenu }: YachtMegaMenuProps) => {
     if (brand.yachtBrandPrimaryFile && brand.yachtBrandPrimaryFile.url) {
       return `${CONTENT_BASE_URL}${brand.yachtBrandPrimaryFile.url}`;
     }
-    if (brand.yachtBrandFiles && brand.yachtBrandFiles.length > 0 && brand.yachtBrandFiles[0].url) {
-      return `${CONTENT_BASE_URL}${brand.yachtBrandFiles[0].url}`;
+    if (brand.yachtBrandFile && brand.yachtBrandFile.length > 0 && brand.yachtBrandFile[0].url) {
+      return `${CONTENT_BASE_URL}${brand.yachtBrandFile[0].url}`;
     }
     return null;
   };

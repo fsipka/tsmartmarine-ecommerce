@@ -16,6 +16,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 import { productsService } from "@/lib/api/services/products.service";
+import FeedbackModal from "@/components/Feedback/FeedbackModal";
 
 interface SearchSuggestion {
   id: number;
@@ -39,6 +40,7 @@ const Header = () => {
   const [stickyMenu, setStickyMenu] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [showLangDropdown, setShowLangDropdown] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const { openCartModal } = useCartModalContext();
   const searchRef = useRef<HTMLDivElement>(null);
   const langRef = useRef<HTMLDivElement>(null);
@@ -412,6 +414,29 @@ const Header = () => {
               <div className="flex items-center gap-5">
                 {isAuthenticated && user ? (
                   <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setFeedbackOpen(true)}
+                      title={t("feedback.title")}
+                      className="hidden sm:inline-flex items-center gap-1.5 text-custom-sm font-medium text-blue border border-blue rounded-md px-3 py-1.5 hover:bg-blue hover:text-white transition-colors"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 0 1-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      {t("feedback.button")}
+                    </button>
                     <Link href="/my-account" className="flex items-center gap-2.5">
                       {user.imageUrl ? (
                         <img
@@ -699,6 +724,8 @@ const Header = () => {
           </div>
         </div>
       </div>
+
+      <FeedbackModal isOpen={feedbackOpen} closeModal={() => setFeedbackOpen(false)} />
     </header>
   );
 };

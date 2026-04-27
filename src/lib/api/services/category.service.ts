@@ -28,7 +28,7 @@ export interface AccessoryCategory {
   name: string;
   description: string | null;
   parentCategoryId: number | null;
-  accessoryCategoryFiles?: CategoryFile[];
+  accessoryCategoryFile?: CategoryFile[];
   accessoryCategoryPrimaryFile?: CategoryFile | null;
   createdDate: string;
   updatedDate: string;
@@ -131,7 +131,7 @@ export interface YachtBrand {
   name: string;
   code: string;
   yachtModels: YachtModel[];
-  yachtBrandFiles: YachtBrandFile[];
+  yachtBrandFile: YachtBrandFile[];
   yachtBrandPrimaryFile: YachtBrandFile | null;
   files: any | null;
   createdDate: string | null;
@@ -154,7 +154,9 @@ export const categoryService = {
   // Get all accessory categories
   getAccessoryCategories: async (): Promise<AccessoryCategory[]> => {
     try {
-      const response = await publicClient.get<ApiResponse<AccessoryCategory[]>>('/accessorycategories');
+      const response = await publicClient.get<ApiResponse<AccessoryCategory[]>>(
+        '/accessorycategories',
+      );
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch accessory categories:', error);
@@ -165,7 +167,9 @@ export const categoryService = {
   // Get all spare part categories
   getSparePartCategories: async (): Promise<SparePartCategory[]> => {
     try {
-      const response = await publicClient.get<ApiResponse<SparePartCategory[]>>('/sparepartcategories');
+      const response = await publicClient.get<ApiResponse<SparePartCategory[]>>(
+        '/sparepartcategories',
+      );
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch spare part categories:', error);
@@ -176,7 +180,10 @@ export const categoryService = {
   // Get all service categories
   getServiceCategories: async (): Promise<ServiceCategory[]> => {
     try {
-      const response = await publicClient.get<ApiResponse<ServiceCategory[]>>('/servicecategories');
+      const response =
+        await publicClient.get<ApiResponse<ServiceCategory[]>>(
+          '/servicecategories',
+        );
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch service categories:', error);
@@ -187,7 +194,9 @@ export const categoryService = {
   // Get all service subcategories
   getServiceSubCategories: async (): Promise<ServiceSubCategory[]> => {
     try {
-      const response = await publicClient.get<ApiResponse<ServiceSubCategory[]>>('/servicesubcategories');
+      const response = await publicClient.get<
+        ApiResponse<ServiceSubCategory[]>
+      >('/servicesubcategories');
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch service subcategories:', error);
@@ -198,7 +207,9 @@ export const categoryService = {
   // Get all accessory subcategories
   getAccessorySubCategories: async (): Promise<AccessorySubCategory[]> => {
     try {
-      const response = await publicClient.get<ApiResponse<AccessorySubCategory[]>>('/accessorysubcategories');
+      const response = await publicClient.get<
+        ApiResponse<AccessorySubCategory[]>
+      >('/accessorysubcategories');
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch accessory subcategories:', error);
@@ -209,7 +220,9 @@ export const categoryService = {
   // Get all spare part subcategories
   getSparePartSubCategories: async (): Promise<SparePartSubCategory[]> => {
     try {
-      const response = await publicClient.get<ApiResponse<SparePartSubCategory[]>>('/sparepartsubcategories');
+      const response = await publicClient.get<
+        ApiResponse<SparePartSubCategory[]>
+      >('/sparepartsubcategories');
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch spare part subcategories:', error);
@@ -220,7 +233,8 @@ export const categoryService = {
   // Get all yacht brands with models
   getYachtBrands: async (): Promise<YachtBrand[]> => {
     try {
-      const response = await publicClient.get<ApiResponse<YachtBrand[]>>('/yachtbrands');
+      const response =
+        await publicClient.get<ApiResponse<YachtBrand[]>>('/yachtbrands');
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch yacht brands:', error);
@@ -231,7 +245,10 @@ export const categoryService = {
   // Get all spare part brands
   getSparePartBrands: async (): Promise<SparePartBrand[]> => {
     try {
-      const response = await publicClient.get<ApiResponse<SparePartBrand[]>>('/sparepartbrands');
+      const response =
+        await publicClient.get<ApiResponse<SparePartBrand[]>>(
+          '/sparepartbrands',
+        );
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch spare part brands:', error);

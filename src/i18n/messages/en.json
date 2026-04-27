@@ -226,7 +226,7 @@
   },
   "account": {
     "myAccount": "My Account",
-    "dashboard": "Dashboard",
+    "dashboard": "Products",
     "orders": "Orders",
     "downloads": "Downloads",
     "addresses": "Addresses",
@@ -265,7 +265,46 @@
     "notYou": "not",
     "logOut": "Log Out",
     "dashboardWelcome": "From your account dashboard you can view your recent orders, manage your shipping and billing addresses, and edit your password and account details.",
-    "noDownloads": "You don't have any download"
+    "noDownloads": "You don't have any download",
+    "addProducts": "Add Products",
+    "manageYourListings": "Manage your listings on the seller portal",
+    "yachts": "Yachts",
+    "accessories": "Accessories",
+    "spareParts": "Spare Parts",
+    "services": "Services",
+    "productsCount": "{count, plural, =0 {No products} =1 {1 product} other {# products}}",
+    "manage": "Manage"
+  },
+  "feedback": {
+    "button": "Feedback",
+    "title": "Send Feedback",
+    "subtitle": "Help us improve by reporting bugs or sharing ideas.",
+    "titleLabel": "Title",
+    "titlePlaceholder": "Brief summary",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Steps to reproduce, expected vs actual behavior...",
+    "typeLabel": "Type",
+    "priorityLabel": "Priority",
+    "screenshotsLabel": "Screenshots",
+    "submit": "Send",
+    "submitting": "Sending...",
+    "submitSuccess": "Feedback sent. Thank you!",
+    "submitError": "Failed to send feedback. Please try again.",
+    "titleRequired": "Title is required",
+    "maxScreenshots": "You can upload up to {max} screenshots",
+    "types": {
+      "Bug": "Bug",
+      "Feature": "Feature request",
+      "Improvement": "Improvement",
+      "Question": "Question",
+      "Other": "Other"
+    },
+    "priorities": {
+      "Low": "Low",
+      "Medium": "Medium",
+      "High": "High",
+      "Critical": "Critical"
+    }
   },
   "home": {
     "hero": {

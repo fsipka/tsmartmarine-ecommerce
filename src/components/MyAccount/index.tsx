@@ -7,11 +7,25 @@ import AddressModal from "./AddressModal";
 import Orders from "../Orders";
 import { useAuth } from "@/contexts/AuthContext";
 import { orderService, Order } from "@/lib/api/services/order.service";
+import { productsService } from "@/lib/api/services/products.service";
 import toast from "react-hot-toast";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+
+const SELLER_PORTAL_URL =
+  process.env.NEXT_PUBLIC_SELLER_PORTAL_URL || "http://localhost:3000";
+
+type CategoryKey = "yachts" | "accessories" | "spare-parts" | "services";
+
+const PRODUCT_CATEGORIES: { key: CategoryKey; labelKey: string }[] = [
+  { key: "yachts", labelKey: "account.yachts" },
+  { key: "accessories", labelKey: "account.accessories" },
+  { key: "spare-parts", labelKey: "account.spareParts" },
+  { key: "services", labelKey: "account.services" },
+];
 
 const MyAccount = () => {
   const t = useTranslations();
+  const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -19,6 +33,12 @@ const MyAccount = () => {
   const [addressModal, setAddressModal] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
+  const [productCounts, setProductCounts] = useState<Record<CategoryKey, number | null>>({
+    yachts: null,
+    accessories: null,
+    "spare-parts": null,
+    services: null,
+  });
 
   // Check for tab parameter in URL
   useEffect(() => {
@@ -39,8 +59,30 @@ const MyAccount = () => {
   useEffect(() => {
     if (isAuthenticated && user) {
       fetchOrders();
+      fetchProductCounts();
     }
   }, [isAuthenticated, user]);
+
+  const fetchProductCounts = async () => {
+    if (!user?.companyId) return;
+    const companyId = Number(user.companyId);
+    try {
+      const [yachts, accessories, spareParts, services] = await Promise.all([
+        productsService.getYachts().catch(() => []),
+        productsService.getAccessories().catch(() => []),
+        productsService.getSpareParts().catch(() => []),
+        productsService.getServices().catch(() => []),
+      ]);
+      setProductCounts({
+        yachts: yachts.filter((y) => y.companyId === companyId).length,
+        accessories: accessories.filter((a) => a.companyId === companyId).length,
+        "spare-parts": spareParts.filter((s) => s.companyId === companyId).length,
+        services: services.filter((s) => s.companyId === companyId).length,
+      });
+    } catch (error) {
+      console.error("Failed to fetch product counts:", error);
+    }
+  };
 
   const fetchOrders = async () => {
     setOrdersLoading(true);
@@ -339,6 +381,59 @@ const MyAccount = () => {
               <p className="text-custom-sm mt-4">
                 {t("account.dashboardWelcome")}
               </p>
+
+              <div className="mt-9">
+                <p className="font-medium text-lg text-dark mb-1.5">
+                  {t("account.addProducts")}
+                </p>
+                <p className="text-custom-sm text-dark-4 mb-5">
+                  {t("account.manageYourListings")}
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {PRODUCT_CATEGORIES.map(({ key, labelKey }) => {
+                    const count = productCounts[key];
+                    return (
+                      <a
+                        key={key}
+                        href={`${SELLER_PORTAL_URL}/${locale}/${key}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center justify-between rounded-md border border-gray-3 bg-gray-1 px-5 py-4 ease-out duration-200 hover:border-blue hover:bg-white hover:shadow-1"
+                      >
+                        <div>
+                          <p className="font-medium text-dark group-hover:text-blue">
+                            {t(labelKey as any)}
+                          </p>
+                          <p className="text-custom-sm text-dark-4 mt-1">
+                            {count === null
+                              ? "..."
+                              : t("account.productsCount", { count })}
+                          </p>
+                        </div>
+                        <span className="inline-flex items-center gap-1.5 text-custom-sm font-medium text-blue">
+                          {t("account.manage")}
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 14 14"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.25 3.5L8.75 7L5.25 10.5"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </span>
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
             {/* <!-- dashboard tab content end -->
 

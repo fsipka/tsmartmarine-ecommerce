@@ -226,7 +226,7 @@
   },
   "account": {
     "myAccount": "Hesabım",
-    "dashboard": "Kontrol Paneli",
+    "dashboard": "Ürünler",
     "orders": "Siparişler",
     "downloads": "İndirilenler",
     "addresses": "Adresler",
@@ -265,7 +265,46 @@
     "notYou": "değil",
     "logOut": "Çıkış Yap",
     "dashboardWelcome": "Hesap panelinizden son siparişlerinizi görüntüleyebilir, teslimat ve fatura adreslerinizi yönetebilir, şifrenizi ve hesap detaylarınızı düzenleyebilirsiniz.",
-    "noDownloads": "Henüz indirmeniz yok"
+    "noDownloads": "Henüz indirmeniz yok",
+    "addProducts": "Ürün Ekle",
+    "manageYourListings": "Satıcı panelinden ilanlarınızı yönetin",
+    "yachts": "Yatlar",
+    "accessories": "Aksesuarlar",
+    "spareParts": "Yedek Parçalar",
+    "services": "Servisler",
+    "productsCount": "{count, plural, =0 {Ürün yok} =1 {1 ürün} other {# ürün}}",
+    "manage": "Yönet"
+  },
+  "feedback": {
+    "button": "Geri Bildirim",
+    "title": "Geri Bildirim Gönder",
+    "subtitle": "Hataları bildirerek veya fikirlerinizi paylaşarak gelişmemize yardımcı olun.",
+    "titleLabel": "Başlık",
+    "titlePlaceholder": "Kısa özet",
+    "descriptionLabel": "Açıklama",
+    "descriptionPlaceholder": "Adım adım nasıl tekrarlanır, beklenen ve gerçekleşen davranış...",
+    "typeLabel": "Tip",
+    "priorityLabel": "Öncelik",
+    "screenshotsLabel": "Ekran Görüntüleri",
+    "submit": "Gönder",
+    "submitting": "Gönderiliyor...",
+    "submitSuccess": "Geri bildirim gönderildi. Teşekkürler!",
+    "submitError": "Geri bildirim gönderilemedi. Lütfen tekrar deneyin.",
+    "titleRequired": "Başlık zorunludur",
+    "maxScreenshots": "En fazla {max} ekran görüntüsü yükleyebilirsiniz",
+    "types": {
+      "Bug": "Hata",
+      "Feature": "Özellik talebi",
+      "Improvement": "İyileştirme",
+      "Question": "Soru",
+      "Other": "Diğer"
+    },
+    "priorities": {
+      "Low": "Düşük",
+      "Medium": "Orta",
+      "High": "Yüksek",
+      "Critical": "Kritik"
+    }
   },
   "home": {
     "hero": {

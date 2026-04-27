@@ -1,9 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import { categoryService, AccessoryCategory, AccessorySubCategory } from "@/lib/api/services/category.service";
-import { Product } from "@/lib/api/services/products.service";
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import {
+  categoryService,
+  AccessoryCategory,
+  AccessorySubCategory,
+} from '@/lib/api/services/category.service';
+import { Product } from '@/lib/api/services/products.service';
 
 interface AccessoryCategoryDropdownProps {
   selectedCategories: (number | string)[];
@@ -24,7 +28,9 @@ const AccessoryCategoryDropdown = ({
 }: AccessoryCategoryDropdownProps) => {
   const [isOpen, setIsOpen] = useState(true);
   const [categories, setCategories] = useState<AccessoryCategory[]>([]);
-  const [subCategories, setSubCategories] = useState<AccessorySubCategory[]>([]);
+  const [subCategories, setSubCategories] = useState<AccessorySubCategory[]>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
   const [expandedCategories, setExpandedCategories] = useState<number[]>([]);
 
@@ -33,12 +39,12 @@ const AccessoryCategoryDropdown = ({
       try {
         const [cats, subCats] = await Promise.all([
           categoryService.getAccessoryCategories(),
-          categoryService.getAccessorySubCategories()
+          categoryService.getAccessorySubCategories(),
         ]);
         setCategories(cats);
         setSubCategories(subCats);
       } catch (error) {
-        console.error("Failed to fetch accessory categories:", error);
+        console.error('Failed to fetch accessory categories:', error);
       } finally {
         setLoading(false);
       }
@@ -49,52 +55,66 @@ const AccessoryCategoryDropdown = ({
 
   // Product counting functions
   const getAccessoryCount = () => {
-    return allProducts.filter(p => p.type === 'accessory').length;
+    return allProducts.filter((p) => p.type === 'accessory').length;
   };
 
   const getCategoryCount = (categoryId: number | string) => {
-    return allProducts.filter(p =>
-      p.type === 'accessory' &&
-      p.categoryId === categoryId
+    return allProducts.filter(
+      (p) => p.type === 'accessory' && p.categoryId === categoryId,
     ).length;
   };
 
   const getSubCategoryCount = (subCategoryId: number | string) => {
-    return allProducts.filter(p =>
-      p.type === 'accessory' &&
-      p.subCategoryId === subCategoryId
+    return allProducts.filter(
+      (p) => p.type === 'accessory' && p.subCategoryId === subCategoryId,
     ).length;
   };
 
   const toggleCategory = (categoryId: number) => {
-    setExpandedCategories(prev =>
+    setExpandedCategories((prev) =>
       prev.includes(categoryId)
-        ? prev.filter(id => id !== categoryId)
-        : [...prev, categoryId]
+        ? prev.filter((id) => id !== categoryId)
+        : [...prev, categoryId],
     );
   };
 
   const getSubCategoriesForCategory = (categoryId: number) => {
-    return subCategories.filter(sub => sub.accessoryCategoryId === categoryId);
+    return subCategories.filter(
+      (sub) => sub.accessoryCategoryId === categoryId,
+    );
   };
 
   // Get image URL for category
   const getCategoryImageUrl = (category: AccessoryCategory) => {
-    if (category.accessoryCategoryPrimaryFile && category.accessoryCategoryPrimaryFile.url) {
+    if (
+      category.accessoryCategoryPrimaryFile &&
+      category.accessoryCategoryPrimaryFile.url
+    ) {
       return `${CONTENT_BASE_URL}${category.accessoryCategoryPrimaryFile.url}`;
     }
-    if (category.accessoryCategoryFiles && category.accessoryCategoryFiles.length > 0 && category.accessoryCategoryFiles[0].url) {
-      return `${CONTENT_BASE_URL}${category.accessoryCategoryFiles[0].url}`;
+    if (
+      category.accessoryCategoryFile &&
+      category.accessoryCategoryFile.length > 0 &&
+      category.accessoryCategoryFile[0].url
+    ) {
+      return `${CONTENT_BASE_URL}${category.accessoryCategoryFile[0].url}`;
     }
     return null;
   };
 
   // Get image URL for subcategory
   const getSubCategoryImageUrl = (subCategory: AccessorySubCategory) => {
-    if (subCategory.accessorySubCategoryPrimaryFile && subCategory.accessorySubCategoryPrimaryFile.url) {
+    if (
+      subCategory.accessorySubCategoryPrimaryFile &&
+      subCategory.accessorySubCategoryPrimaryFile.url
+    ) {
       return `${CONTENT_BASE_URL}${subCategory.accessorySubCategoryPrimaryFile.url}`;
     }
-    if (subCategory.accessorySubCategoryFiles && subCategory.accessorySubCategoryFiles.length > 0 && subCategory.accessorySubCategoryFiles[0].url) {
+    if (
+      subCategory.accessorySubCategoryFiles &&
+      subCategory.accessorySubCategoryFiles.length > 0 &&
+      subCategory.accessorySubCategoryFiles[0].url
+    ) {
       return `${CONTENT_BASE_URL}${subCategory.accessorySubCategoryFiles[0].url}`;
     }
     return null;
@@ -110,7 +130,7 @@ const AccessoryCategoryDropdown = ({
       >
         <h5 className="font-semibold text-dark">Categories</h5>
         <svg
-          className={`fill-current transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`fill-current transition-transform ${isOpen ? 'rotate-180' : ''}`}
           width="16"
           height="16"
           viewBox="0 0 16 16"
@@ -139,7 +159,10 @@ const AccessoryCategoryDropdown = ({
                 <input
                   type="checkbox"
                   id="all-accessories"
-                  checked={selectedCategories.length === 0 && selectedSubCategories.length === 0}
+                  checked={
+                    selectedCategories.length === 0 &&
+                    selectedSubCategories.length === 0
+                  }
                   onChange={() => {
                     onCategorySelect('all-accessories');
                   }}
@@ -151,7 +174,9 @@ const AccessoryCategoryDropdown = ({
                 >
                   <span className="text-sm text-dark">All Accessories</span>
                   {accessoryCount > 0 && (
-                    <span className="text-gray-4 text-sm">({accessoryCount})</span>
+                    <span className="text-gray-4 text-sm">
+                      ({accessoryCount})
+                    </span>
                   )}
                 </label>
               </div>
@@ -159,7 +184,8 @@ const AccessoryCategoryDropdown = ({
               {/* Categories */}
               {categories.map((category) => {
                 const categoryCount = getCategoryCount(category.id);
-                const hasSubCategories = getSubCategoriesForCategory(category.id).length > 0;
+                const hasSubCategories =
+                  getSubCategoriesForCategory(category.id).length > 0;
                 const isExpanded = expandedCategories.includes(category.id);
                 const imageUrl = getCategoryImageUrl(category);
 
@@ -188,11 +214,15 @@ const AccessoryCategoryDropdown = ({
                             />
                           </div>
                         )}
-                        <span className={`${hasSubCategories ? "font-medium" : ""} flex-1 text-sm text-dark group-hover:text-blue transition-colors`}>
+                        <span
+                          className={`${hasSubCategories ? 'font-medium' : ''} flex-1 text-sm text-dark group-hover:text-blue transition-colors`}
+                        >
                           {category.name}
                         </span>
                         {categoryCount > 0 && (
-                          <span className="text-gray-4 text-sm">({categoryCount})</span>
+                          <span className="text-gray-4 text-sm">
+                            ({categoryCount})
+                          </span>
                         )}
                       </label>
                       {hasSubCategories && (
@@ -201,7 +231,7 @@ const AccessoryCategoryDropdown = ({
                           className="p-1 hover:bg-gray-1 rounded transition-colors"
                         >
                           <svg
-                            className={`fill-current text-gray-4 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                            className={`fill-current text-gray-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
                             width="12"
                             height="12"
                             viewBox="0 0 16 16"
@@ -222,44 +252,60 @@ const AccessoryCategoryDropdown = ({
                     {/* Subcategories */}
                     {hasSubCategories && isExpanded && (
                       <div className="ml-6 space-y-2 border-l-2 border-gray-2 pl-3">
-                        {getSubCategoriesForCategory(category.id).map((subCategory) => {
-                          const subCategoryCount = getSubCategoryCount(subCategory.id);
-                          const subImageUrl = getSubCategoryImageUrl(subCategory);
+                        {getSubCategoriesForCategory(category.id).map(
+                          (subCategory) => {
+                            const subCategoryCount = getSubCategoryCount(
+                              subCategory.id,
+                            );
+                            const subImageUrl =
+                              getSubCategoryImageUrl(subCategory);
 
-                          return (
-                            <div key={subCategory.id} className="flex items-center gap-2">
-                              <input
-                                type="checkbox"
-                                id={`subcategory-${subCategory.id}`}
-                                checked={selectedSubCategories.includes(subCategory.id)}
-                                onChange={() => onSubCategorySelect(subCategory.id)}
-                                className="w-4 h-4 rounded border-gray-3 text-blue focus:ring-blue"
-                              />
-                              <label
-                                htmlFor={`subcategory-${subCategory.id}`}
-                                className="flex-1 flex items-center gap-2 cursor-pointer group"
+                            return (
+                              <div
+                                key={subCategory.id}
+                                className="flex items-center gap-2"
                               >
-                                {subImageUrl && (
-                                  <div className="relative w-6 h-6 flex-shrink-0 bg-gray-1 rounded overflow-hidden">
-                                    <Image
-                                      src={subImageUrl}
-                                      alt={subCategory.name}
-                                      fill
-                                      className="object-contain p-0.5"
-                                      unoptimized={subImageUrl.startsWith('http')}
-                                    />
-                                  </div>
-                                )}
-                                <span className="flex-1 text-sm text-dark group-hover:text-blue transition-colors">
-                                  {subCategory.name}
-                                </span>
-                                {subCategoryCount > 0 && (
-                                  <span className="text-gray-4 text-sm">({subCategoryCount})</span>
-                                )}
-                              </label>
-                            </div>
-                          );
-                        })}
+                                <input
+                                  type="checkbox"
+                                  id={`subcategory-${subCategory.id}`}
+                                  checked={selectedSubCategories.includes(
+                                    subCategory.id,
+                                  )}
+                                  onChange={() =>
+                                    onSubCategorySelect(subCategory.id)
+                                  }
+                                  className="w-4 h-4 rounded border-gray-3 text-blue focus:ring-blue"
+                                />
+                                <label
+                                  htmlFor={`subcategory-${subCategory.id}`}
+                                  className="flex-1 flex items-center gap-2 cursor-pointer group"
+                                >
+                                  {subImageUrl && (
+                                    <div className="relative w-6 h-6 flex-shrink-0 bg-gray-1 rounded overflow-hidden">
+                                      <Image
+                                        src={subImageUrl}
+                                        alt={subCategory.name}
+                                        fill
+                                        className="object-contain p-0.5"
+                                        unoptimized={subImageUrl.startsWith(
+                                          'http',
+                                        )}
+                                      />
+                                    </div>
+                                  )}
+                                  <span className="flex-1 text-sm text-dark group-hover:text-blue transition-colors">
+                                    {subCategory.name}
+                                  </span>
+                                  {subCategoryCount > 0 && (
+                                    <span className="text-gray-4 text-sm">
+                                      ({subCategoryCount})
+                                    </span>
+                                  )}
+                                </label>
+                              </div>
+                            );
+                          },
+                        )}
                       </div>
                     )}
                   </div>

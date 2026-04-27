@@ -226,7 +226,7 @@
   },
   "account": {
     "myAccount": "Mon Compte",
-    "dashboard": "Tableau de Bord",
+    "dashboard": "Produits",
     "orders": "Commandes",
     "downloads": "Téléchargements",
     "addresses": "Adresses",
@@ -265,7 +265,46 @@
     "notYou": "pas",
     "logOut": "Se Déconnecter",
     "dashboardWelcome": "Depuis votre tableau de bord, vous pouvez consulter vos commandes récentes, gérer vos adresses de livraison et de facturation, et modifier votre mot de passe et les détails de votre compte.",
-    "noDownloads": "Vous n'avez aucun téléchargement"
+    "noDownloads": "Vous n'avez aucun téléchargement",
+    "addProducts": "Ajouter des Produits",
+    "manageYourListings": "Gérez vos annonces sur le portail vendeur",
+    "yachts": "Yachts",
+    "accessories": "Accessoires",
+    "spareParts": "Pièces de Rechange",
+    "services": "Services",
+    "productsCount": "{count, plural, =0 {Aucun produit} =1 {1 produit} other {# produits}}",
+    "manage": "Gérer"
+  },
+  "feedback": {
+    "button": "Commentaires",
+    "title": "Envoyer des commentaires",
+    "subtitle": "Aidez-nous à nous améliorer en signalant des bogues ou en partageant des idées.",
+    "titleLabel": "Titre",
+    "titlePlaceholder": "Bref résumé",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Étapes pour reproduire, comportement attendu vs réel...",
+    "typeLabel": "Type",
+    "priorityLabel": "Priorité",
+    "screenshotsLabel": "Captures d'écran",
+    "submit": "Envoyer",
+    "submitting": "Envoi en cours...",
+    "submitSuccess": "Commentaires envoyés. Merci!",
+    "submitError": "Échec de l'envoi. Veuillez réessayer.",
+    "titleRequired": "Le titre est requis",
+    "maxScreenshots": "Vous pouvez téléverser jusqu'à {max} captures d'écran",
+    "types": {
+      "Bug": "Bogue",
+      "Feature": "Demande de fonctionnalité",
+      "Improvement": "Amélioration",
+      "Question": "Question",
+      "Other": "Autre"
+    },
+    "priorities": {
+      "Low": "Basse",
+      "Medium": "Moyenne",
+      "High": "Haute",
+      "Critical": "Critique"
+    }
   },
   "home": {
     "hero": {

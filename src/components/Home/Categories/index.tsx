@@ -1,13 +1,16 @@
-"use client";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { useCallback, useRef, useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { categoryService, YachtBrand } from "@/lib/api/services/category.service";
+'use client';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { useCallback, useRef, useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import {
+  categoryService,
+  YachtBrand,
+} from '@/lib/api/services/category.service';
 
 // Import Swiper styles
-import "swiper/css/navigation";
-import "swiper/css";
+import 'swiper/css/navigation';
+import 'swiper/css';
 
 const CONTENT_BASE_URL = 'https://marineapi.tsmart.ai/contents/';
 
@@ -53,8 +56,8 @@ const Categories = () => {
       return `${CONTENT_BASE_URL}${brand.yachtBrandPrimaryFile.url}`;
     }
 
-    if (brand.yachtBrandFiles && brand.yachtBrandFiles.length > 0) {
-      const firstFile = brand.yachtBrandFiles[0];
+    if (brand.yachtBrandFile && brand.yachtBrandFile.length > 0) {
+      const firstFile = brand.yachtBrandFile[0];
       if (firstFile?.url) {
         return `${CONTENT_BASE_URL}${firstFile.url}`;
       }
@@ -180,7 +183,10 @@ const Categories = () => {
             >
               {brands.map((brand) => (
                 <SwiperSlide key={brand.id}>
-                  <Link href={`/shop?brandId=${brand.id}`} className="group flex flex-col items-center">
+                  <Link
+                    href={`/shop?brandId=${brand.id}`}
+                    className="group flex flex-col items-center"
+                  >
                     <div className="max-w-[130px] w-full bg-[#F2F3F8] h-32.5 rounded-full flex items-center justify-center mb-4 overflow-hidden">
                       <div className="relative w-[82px] h-[62px]">
                         <Image
