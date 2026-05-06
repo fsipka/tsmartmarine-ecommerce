@@ -3,53 +3,61 @@ import { ApiResponse, AuthResponse, LoginRequest, RegisterRequest } from '../typ
 import { jwtDecode } from 'jwt-decode';
 
 export const authService = {
-  // Login
+  // Buyer login — hits /Buyers/Login on the marine API. Backend rejects
+  // anything other than UserType=Buyer (3); admin-panel users cannot
+  // authenticate through this path.
   login: async (credentials: LoginRequest): Promise<AuthResponse> => {
-    try {
-      const response = await api.post<ApiResponse<AuthResponse>>('/users/login', credentials);
+    const response = await api.post<ApiResponse<AuthResponse>>('/Buyers/Login', {
+      Email: credentials.email,
+      Password: credentials.password,
+    });
 
-      // API response format: { data: { accessToken, refreshToken, expiration, user }, statusCode, errors }
-      const apiData = response.data.data;
-
-      if (!apiData) {
-        throw new Error('Invalid API response format');
-      }
-
-      const accessToken = apiData.accessToken || apiData.token;
-
-      // Decode JWT token to extract user information
-      let decodedToken: any = {};
-      try {
-        decodedToken = jwtDecode(accessToken);
-      } catch (error) {
-        console.error('Failed to decode JWT token:', error);
-      }
-
-      // Create user object from decoded token
-      const user = {
-        id: decodedToken.sub || '',
-        email: decodedToken.email || '',
-        firstName: decodedToken.name?.split(' ')[0] || decodedToken.name || '',
-        lastName: decodedToken.name?.split(' ').slice(1).join(' ') || '',
-        companyId: decodedToken.companyId ? parseInt(decodedToken.companyId) : undefined,
-        role: decodedToken.roles?.[0] || decodedToken.role,
-      };
-
-      // Return normalized AuthResponse
-      return {
-        token: accessToken,
-        refreshToken: apiData.refreshToken,
-        expiration: apiData.expiration,
-        user,
-      };
-    } catch (error: any) {
-      throw error;
+    const apiData = response.data.data;
+    if (!apiData) {
+      throw new Error('Invalid API response format');
     }
+
+    const accessToken = apiData.accessToken || apiData.token;
+
+    let decodedToken: any = {};
+    try {
+      decodedToken = jwtDecode(accessToken);
+    } catch (error) {
+      console.error('Failed to decode JWT token:', error);
+    }
+
+    const user = {
+      id: decodedToken.sub || '',
+      email: credentials.email,
+      firstName: decodedToken.name?.split(' ')[0] || decodedToken.name || '',
+      lastName: decodedToken.name?.split(' ').slice(1).join(' ') || '',
+      companyId: undefined,
+      role: 'Buyer',
+    };
+
+    return {
+      token: accessToken,
+      refreshToken: apiData.refreshToken,
+      expiration: apiData.expiration,
+      user,
+    };
   },
 
-  // Register
-  register: async (data: RegisterRequest): Promise<AuthResponse> => {
-    const response = await api.post<ApiResponse<AuthResponse>>('/auth/register', data);
+  // Buyer registration — creates a Users row with UserType=3 (Buyer) and
+  // hashed password. Returns nothing actionable; client must follow up with
+  // login() to obtain a token.
+  register: async (data: RegisterRequest): Promise<{ id: number; email: string }> => {
+    const response = await api.post<ApiResponse<{ id: number; email: string }>>('/Buyers/Register', {
+      Name: (data as any).firstName ?? (data as any).Name ?? '',
+      Surname: (data as any).lastName ?? (data as any).Surname ?? '',
+      Email: data.email,
+      Password: data.password,
+      Phone: (data as any).phone ?? (data as any).Phone ?? null,
+    });
+
+    if (!response.data.data) {
+      throw new Error('Invalid API response format');
+    }
     return response.data.data;
   },
 

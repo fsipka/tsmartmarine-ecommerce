@@ -1,7 +1,6 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { authService } from '@/lib/api/services';
-import { companyService } from '@/lib/api/services/company.service';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -25,25 +24,13 @@ export const authOptions: NextAuthOptions = {
 
 
           if (response && response.user) {
-            let companyLogoUrl = null;
-
-            // Fetch company logo if user has companyId
-            if (response.user.companyId) {
-              try {
-                const company = await companyService.getCompanyWithDetails(response.user.companyId);
-                companyLogoUrl = companyService.getCompanyLogoUrl(company);
-              } catch (error) {
-                console.error('Failed to fetch company details:', error);
-                // Continue with login even if company fetch fails
-              }
-            }
-
+            // Buyers have no associated company. Skip company-logo lookup.
             const user = {
               id: response.user.id,
               email: response.user.email,
-              name: `${response.user.firstName} ${response.user.lastName}`,
-              companyId: response.user.companyId,
-              companyLogoUrl,
+              name: `${response.user.firstName} ${response.user.lastName}`.trim() || response.user.email,
+              companyId: undefined,
+              companyLogoUrl: null,
               accessToken: response.token,
               refreshToken: response.refreshToken,
             };

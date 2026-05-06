@@ -20,6 +20,32 @@ interface FileObject {
   isPrimary: boolean;
 }
 
+const CURRENCY_LOOKUP: Record<string, number> = {
+  '1': 1, usd: 1, dollar: 1, $: 1,
+  '2': 2, eur: 2, euro: 2, '€': 2,
+  '3': 3, gbp: 3, pound: 3, '£': 3,
+  '4': 4, try: 4, lira: 4, '₺': 4,
+  '5': 5, cad: 5, 'canadian dollar': 5, 'c$': 5,
+};
+
+const SALES_STATUS_LOOKUP: Record<string, number> = {
+  '1': 1, sold: 1,
+  '2': 2, 'in stock': 2,
+  '3': 3, ordered: 3,
+};
+
+export const normalizeCurrencyId = (raw: unknown): number | null => {
+  if (raw == null || raw === '') return null;
+  const key = String(raw).trim().toLowerCase();
+  return CURRENCY_LOOKUP[key] ?? null;
+};
+
+export const normalizeSalesStatusId = (raw: unknown): number | null => {
+  if (raw == null || raw === '') return null;
+  const key = String(raw).trim().toLowerCase();
+  return SALES_STATUS_LOOKUP[key] ?? null;
+};
+
 export interface Yacht {
   id: number;
   name: string;
@@ -29,6 +55,9 @@ export interface Yacht {
   length: number | null;
   price: number;
   salePrice?: number;
+  currencyType?: number | string | null;
+  salesStatus?: number | string | null;
+  isSaleActive?: boolean;
   yachtBrandId: number | null;
   yachtModelId: number | null;
   yachtFiles?: FileObject[];
@@ -49,7 +78,8 @@ export interface Accessory {
   purchasePrice: number;
   stock: number;
   unit: number;
-  currencyType: number;
+  currencyType: number | string | null;
+  isSaleActive?: boolean;
   accessoryFiles?: FileObject[];
   accessoryPrimaryFile?: FileObject | null;
   createdDate: string;
@@ -69,7 +99,8 @@ export interface SparePart {
   purchasePrice: number;
   stock: number;
   unit: number;
-  currencyType: number;
+  currencyType: number | string | null;
+  isSaleActive?: boolean;
   partNumber: string | null;
   sparePartFiles?: FileObject[];
   sparePartPrimaryFile?: FileObject | null;
@@ -88,7 +119,8 @@ export interface Service {
   price: number;
   salePrice?: number;
   unit: number;
-  currencyType: number;
+  currencyType: number | string | null;
+  isSaleActive?: boolean;
   serviceFiles?: FileObject[];
   servicePrimaryFile?: FileObject | null;
   createdDate: string;
@@ -180,22 +212,20 @@ const convertToComponentProduct = (apiProduct: Product): any => {
 };
 
 export const productsService = {
-  // Get all yachts
+  // Storefront-only listing: backend filters Status=true AND IsSaleActive=true.
   getYachts: async (): Promise<Yacht[]> => {
     try {
-      const response = await publicClient.get<ApiResponse<Yacht[]>>('/yachts');
-      const yachts = response.data.data || [];
-      return yachts;
+      const response = await publicClient.get<ApiResponse<Yacht[]>>('/yachts/Storefront');
+      return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch yachts:', error);
       throw error;
     }
   },
 
-  // Get all accessories
   getAccessories: async (): Promise<Accessory[]> => {
     try {
-      const response = await publicClient.get<ApiResponse<Accessory[]>>('/accessories');
+      const response = await publicClient.get<ApiResponse<Accessory[]>>('/accessories/Storefront');
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch accessories:', error);
@@ -203,10 +233,9 @@ export const productsService = {
     }
   },
 
-  // Get all spare parts
   getSpareParts: async (): Promise<SparePart[]> => {
     try {
-      const response = await publicClient.get<ApiResponse<SparePart[]>>('/spareparts');
+      const response = await publicClient.get<ApiResponse<SparePart[]>>('/spareparts/Storefront');
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch spare parts:', error);
@@ -214,10 +243,9 @@ export const productsService = {
     }
   },
 
-  // Get all services
   getServices: async (): Promise<Service[]> => {
     try {
-      const response = await publicClient.get<ApiResponse<Service[]>>('/services');
+      const response = await publicClient.get<ApiResponse<Service[]>>('/services/Storefront');
       return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch services:', error);
@@ -235,8 +263,11 @@ export const productsService = {
         productsService.getServices(),
       ]);
 
+      const onSale = <T extends { isSaleActive?: boolean }>(arr: T[]): T[] =>
+        arr.filter(r => r.isSaleActive !== false);
+
       const products: Product[] = [
-        ...yachts.map(yacht => ({
+        ...onSale(yachts).map(yacht => ({
           id: yacht.id,
           name: yacht.name,
           description: yacht.description,
@@ -250,7 +281,7 @@ export const productsService = {
           yachtPrimaryFile: yacht.yachtPrimaryFile,
           originalData: yacht,
         })),
-        ...accessories.map(accessory => ({
+        ...onSale(accessories).map(accessory => ({
           id: accessory.id,
           name: accessory.name,
           description: accessory.description,
@@ -264,7 +295,7 @@ export const productsService = {
           accessoryPrimaryFile: accessory.accessoryPrimaryFile,
           originalData: accessory,
         })),
-        ...spareParts.map(sparePart => ({
+        ...onSale(spareParts).map(sparePart => ({
           id: sparePart.id,
           name: sparePart.name,
           description: sparePart.description,
@@ -279,7 +310,7 @@ export const productsService = {
           sparePartPrimaryFile: sparePart.sparePartPrimaryFile,
           originalData: sparePart,
         })),
-        ...services.map(service => ({
+        ...onSale(services).map(service => ({
           id: service.id,
           name: service.name,
           description: service.description,

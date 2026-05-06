@@ -23,7 +23,7 @@ export interface OrderAccessory {
   purchasePrice: number;
   stock: number;
   unit: number;
-  currencyType: number;
+  currencyType: number | string | null;
 }
 
 export interface OrderSparePart {
@@ -35,7 +35,7 @@ export interface OrderSparePart {
   purchasePrice: number;
   stock: number;
   unit: number;
-  currencyType: number;
+  currencyType: number | string | null;
 }
 
 export interface OrderItem {
