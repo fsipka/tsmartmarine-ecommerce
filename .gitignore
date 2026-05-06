@@ -64,6 +64,9 @@ Desktop.ini
 *.sln
 *.sw?
 
+#env
+.env
+
 # Logs
 logs
 *.log
