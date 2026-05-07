@@ -1,4 +1,5 @@
 import 'next-auth';
+import { AccountType } from '@/lib/api/types';
 
 declare module 'next-auth' {
   interface Session {
@@ -10,6 +11,8 @@ declare module 'next-auth' {
       accessToken: string;
       companyId?: number;
       companyLogoUrl?: string | null;
+      accountType?: AccountType;
+      approvalStatus?: number;
     };
   }
 
@@ -21,6 +24,8 @@ declare module 'next-auth' {
     refreshToken?: string;
     companyId?: number;
     companyLogoUrl?: string | null;
+    accountType?: AccountType;
+    approvalStatus?: number;
   }
 }
 
@@ -31,5 +36,7 @@ declare module 'next-auth/jwt' {
     refreshToken?: string;
     companyId?: number;
     companyLogoUrl?: string | null;
+    accountType?: AccountType;
+    approvalStatus?: number;
   }
 }

@@ -76,6 +76,8 @@ export async function createUserSessionFromToken(
     companyLogoUrl,
     isCustomer: payload.isCustomer === 'true',
     roles: payload.roles,
+    accountType: payload.companyId ? 'vendor' : 'buyer',
+    approvalStatus: payload.approvalStatus ?? null,
     accessToken,
     refreshToken,
     expiresAt: payload.exp * 1000, // Convert to milliseconds

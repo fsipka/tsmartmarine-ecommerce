@@ -15,9 +15,12 @@ export interface PaginatedResponse<T> extends ApiResponse<T> {
 }
 
 // Auth Types
+export type AccountType = 'buyer' | 'vendor';
+
 export interface LoginRequest {
   email: string;
   password: string;
+  accountType?: AccountType;
 }
 
 export interface RegisterRequest {
@@ -25,6 +28,19 @@ export interface RegisterRequest {
   password: string;
   firstName: string;
   lastName: string;
+  phone?: string;
+}
+
+export interface VendorRegisterRequest {
+  CompanyName: string;
+  Country?: string;
+  Website?: string | null;
+  Phone?: string | null;
+  AdminName: string;
+  AdminSurname?: string | null;
+  AdminEmail: string;
+  AdminPhone?: string | null;
+  AdminPassword: string;
 }
 
 export interface AuthResponse {
@@ -42,6 +58,8 @@ export interface User {
   lastName: string;
   companyId?: number;
   role?: string;
+  accountType?: AccountType;
+  approvalStatus?: number;
 }
 
 // Product Types

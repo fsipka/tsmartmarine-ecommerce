@@ -7,8 +7,11 @@ import { useRouter } from "next/navigation";
 import { authService } from "@/lib/api/services/auth.service";
 import { useAuth } from "@/contexts/AuthContext";
 import { createUserSessionFromToken } from "@/lib/auth/session";
+import { AccountType } from "@/lib/api/types";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
+
+const APPROVED = 2;
 
 const Signin = () => {
   const t = useTranslations("auth");
@@ -16,6 +19,7 @@ const Signin = () => {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [accountType, setAccountType] = useState<AccountType>("buyer");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,7 +27,7 @@ const Signin = () => {
     setLoading(true);
 
     try {
-      const response = await authService.login({ email, password });
+      const response = await authService.login({ email, password, accountType });
 
       // API response'tan user session oluştur
       const userSession = await createUserSessionFromToken(
@@ -37,8 +41,14 @@ const Signin = () => {
         login(userSession);
         toast.success(t("loginSuccess"));
 
-        // Ana sayfaya yönlendir
-        router.push('/');
+        // Vendor pending/rejected → application-status; otherwise home.
+        const isVendor = response.user?.accountType === 'vendor';
+        const status = response.user?.approvalStatus;
+        if (isVendor && status != null && status !== APPROVED) {
+          router.push('/application-status');
+        } else {
+          router.push('/');
+        }
       } else {
         toast.error(t("sessionError"));
       }
@@ -75,6 +85,30 @@ const Signin = () => {
             </div>
 
             <div>
+              <div className="grid grid-cols-2 gap-2 mb-6 p-1 rounded-lg bg-gray-1">
+                <button
+                  type="button"
+                  onClick={() => setAccountType("buyer")}
+                  className={`py-2.5 px-4 rounded-md text-sm font-medium duration-200 ${
+                    accountType === "buyer"
+                      ? "bg-white text-dark shadow-1"
+                      : "text-dark-5 hover:text-dark"
+                  }`}
+                >
+                  {t("buyerAccount") || "Buyer"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAccountType("vendor")}
+                  className={`py-2.5 px-4 rounded-md text-sm font-medium duration-200 ${
+                    accountType === "vendor"
+                      ? "bg-white text-dark shadow-1"
+                      : "text-dark-5 hover:text-dark"
+                  }`}
+                >
+                  {t("vendorAccount") || "Vendor / Company"}
+                </button>
+              </div>
               <form onSubmit={handleSubmit}>
                 <div className="mb-5">
                   <label htmlFor="email" className="block mb-2.5">

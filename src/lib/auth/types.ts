@@ -7,11 +7,14 @@ export interface JWTPayload {
   companyLogoUrl: string;
   isCustomer: string;
   roles: string[];
+  approvalStatus?: number;
   nbf: number;
   exp: number;
   iss: string;
   aud: string;
 }
+
+export type AccountType = 'buyer' | 'vendor';
 
 export interface UserSession {
   id: string;
@@ -23,6 +26,8 @@ export interface UserSession {
   companyLogoUrl: string;
   isCustomer: boolean;
   roles: string[];
+  accountType?: AccountType;
+  approvalStatus?: number | null;
   accessToken: string;
   refreshToken: string;
   expiresAt: number;
