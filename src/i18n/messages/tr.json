@@ -578,6 +578,7 @@
     "section7Content": "Bu şartları istediğimiz zaman değiştirme hakkını saklı tutarız. Değişiklikler web sitesinde yayınlandıktan hemen sonra yürürlüğe girecektir. Web sitesini kullanmaya devam etmeniz, değişikliklerin yayınlanmasından sonra bu değişiklikleri kabul ettiğiniz anlamına gelir."
   },
   "supplier": {
+    "adminAccount": "Yönetici Hesabı",
     "title": "Tedarikçi Olun",
     "formTitle": "Tedarikçi Kayıt Formu",
     "formDescription": "Tedarikçi olarak kaydolmak için aşağıdaki formu doldurun. Ekibimiz başvurunuzu inceleyecek ve 3-5 iş günü içinde sizinle iletişime geçecektir.",
