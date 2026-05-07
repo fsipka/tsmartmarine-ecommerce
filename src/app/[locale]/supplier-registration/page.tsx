@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { useTranslations, useLocale } from "next-intl";
 
 import Breadcrumb from "@/components/Common/Breadcrumb";
+import PhoneInput from "@/components/Common/PhoneInput";
 import { COUNTRIES } from "@/constants/countries";
 import { authService } from "@/lib/api/services/auth.service";
 import { useAuth } from "@/contexts/AuthContext";
@@ -174,16 +175,11 @@ const SupplierRegistrationPage = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-dark mb-2">
-                    {t("phoneLabel") || "Company Phone"}
-                  </label>
-                  <input
-                    type="tel"
+                  <PhoneInput
+                    label={t("phoneLabel") || "Company Phone"}
                     value={form.Phone}
-                    onChange={onChange("Phone")}
+                    onChange={(v) => setForm((p) => ({ ...p, Phone: v }))}
                     disabled={submitting}
-                    className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
-                    placeholder="+90 ..."
                   />
                 </div>
               </div>
@@ -249,18 +245,12 @@ const SupplierRegistrationPage = () => {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-dark mb-2">
-                  {t("phoneLabel") || "Phone"}
-                </label>
-                <input
-                  type="tel"
-                  value={form.AdminPhone}
-                  onChange={onChange("AdminPhone")}
-                  disabled={submitting}
-                  className="w-full px-4 py-3 border border-gray-3 rounded-md focus:outline-none focus:border-blue"
-                />
-              </div>
+              <PhoneInput
+                label={t("phoneLabel") || "Phone"}
+                value={form.AdminPhone}
+                onChange={(v) => setForm((p) => ({ ...p, AdminPhone: v }))}
+                disabled={submitting}
+              />
 
               <div>
                 <label className="block text-sm font-medium text-dark mb-2">
