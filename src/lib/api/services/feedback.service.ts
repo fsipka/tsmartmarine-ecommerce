@@ -1,9 +1,19 @@
 import { api } from '../client';
 import { ApiResponse } from '../types';
 
-export type FeedbackType = 'Bug' | 'Feature' | 'Improvement' | 'Question' | 'Other';
+export type FeedbackType =
+  | 'Bug'
+  | 'Feature'
+  | 'Improvement'
+  | 'Question'
+  | 'Other';
 export type FeedbackPriority = 'Low' | 'Medium' | 'High' | 'Critical';
-export type FeedbackStatus = 'Open' | 'InProgress' | 'Resolved' | 'Closed' | 'Rejected';
+export type FeedbackStatus =
+  | 'Open'
+  | 'InProgress'
+  | 'Resolved'
+  | 'Closed'
+  | 'Rejected';
 
 export interface FeedbackCreateInput {
   Title: string;
