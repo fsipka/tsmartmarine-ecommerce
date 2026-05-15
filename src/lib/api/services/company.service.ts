@@ -47,7 +47,9 @@ export const companyService = {
   // Get company with details by ID
   getCompanyWithDetails: async (companyId: number): Promise<Company> => {
     try {
-      const response = await publicClient.get<ApiResponse<Company>>(`/companies/getwithdetails/${companyId}`);
+      const response = await publicClient.get<ApiResponse<Company>>(
+        `/companies/getwithdetails/${companyId}`,
+      );
       return response.data.data;
     } catch (error) {
       console.error('Failed to fetch company details:', error);
@@ -62,8 +64,8 @@ export const companyService = {
     }
 
     // Get first file that is not a document
-    const logoFile = company.companyFiles.find(file => !file.isDocument);
-    if (logoFile && logoFile.url) { 
+    const logoFile = company.companyFiles.find((file) => !file.isDocument);
+    if (logoFile && logoFile.url) {
       return `${CONTENT_BASE_URL}${logoFile.url}`;
     }
 
